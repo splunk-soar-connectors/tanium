@@ -37,6 +37,7 @@ class TaniumConnector(BaseConnector):
     ACTION_ID_TERM_PROCESS = "terminate_process"
     ACTION_ID_LIST_PROCESSES = "list_processes"
     ACTION_ID_EXECUTE_CUSTOM_QUESTION = "get_parsed_questions"
+    ACTION_ID_EXECUTE_ACTION = "execute_action"
     call_index = 0
 
     def __init__(self):
@@ -289,6 +290,12 @@ class TaniumConnector(BaseConnector):
             pass
 
         action_result_map = response.get('action_result_map')
+        action_object = response.get('action_object', None)
+
+        try:
+            action_id = action_object.id
+        except:
+            action_id = 'unknown'
 
         if (not action_result_map):
             action_result.set_status(phantom.APP_ERROR,
@@ -330,6 +337,8 @@ class TaniumConnector(BaseConnector):
                 status_msg.append(message)
 
         action_result.set_status(status, '\n'.join(status_msg))
+        action_result.add_data(action_result_map)
+        action_result.set_summary({'id': str(action_id)})
 
         return phantom.APP_SUCCESS
 
@@ -407,6 +416,24 @@ class TaniumConnector(BaseConnector):
             action_result.update_summary({TANIUM_JSON_QUERY_TEXT: query_text})
 
         return (phantom.APP_SUCCESS, rows, columns)
+
+    def _execute_action(self, param):
+
+        action_result = self.add_action_result(ActionResult(dict(param)))
+        container_id = self.get_container_id()
+        ip_hostname = param[phantom.APP_JSON_IP_HOSTNAME]
+        package_name = param['package_name']
+        action_name = "Phantom Execution - %s " % (package_name.split('{')[0].strip())
+        endpoint_filter = IP_ACTION_FILTER.format(ip_hostname=ip_hostname)
+
+        if (not phantom.is_ip(ip_hostname)):
+            endpoint_filter = MACHINE_NAME_ACTION_FILTER.format(ip_hostname=ip_hostname)
+
+        action_result.set_status(phantom.APP_SUCCESS, "Endpoint Filter: " + str(endpoint_filter))
+
+        self._deploy_action(endpoint_filter, package_name, action_name, ACTION_COMMENT.format(container_id=container_id), action_result)
+
+        return action_result.get_status()
 
     def _deploy_action(self, action_filters, package, name, comment, action_result):
 
@@ -636,6 +663,8 @@ class TaniumConnector(BaseConnector):
             result = self._list_processes(param)
         elif (action == self.ACTION_ID_EXECUTE_CUSTOM_QUESTION):
             result = self._get_parsed_questions(param)
+        elif (action == self.ACTION_ID_EXECUTE_ACTION):
+            result = self._execute_action(param)
         else:
             self.unknown_action()
 
