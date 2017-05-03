@@ -35,15 +35,19 @@
         "order": 2,
         "default": false
       },
+      "ph": {
+        "data_type": "ph",
+        "order": 3
+      },
       "username": {
         "data_type": "string",
-        "order": 3,
+        "order": 4,
         "description": "Username",
         "optional": true
       },
       "password": {
         "data_type": "password",
-        "order": 4,
+        "order": 5,
         "description": "Password",
         "optional": true
       }
@@ -172,6 +176,79 @@
           {
             "data_path": "action_result.parameter.is_parsed",
             "data_type": "boolean"
+          },
+          {
+            "data_path": "summary.total_objects",
+            "data_type": "numeric"
+          },
+          {
+            "data_path": "summary.total_objects_successful",
+            "data_type": "numeric"
+          }
+        ],
+        "versions": "EQ(*)"
+      },      
+      {
+        "action": "execute action",
+        "description": "Execute Tanium action (package)",
+        "verbose": "Use this action to run packages on endpoints. You will require to know the Package name and the parameters to pass.<br>For example the <b>Registry - Create Key</b> package is used to create a Registry key on an endpoint. It takes two parameters<ul><li><b>$1</b> is the Architecture</li> and <li><b>$2</b> is the Registry Key Name</li></ul>So use the <b>execute action</b> action with the <b>package_name</b> set to:<br><b>Registry - Create Key{$1=64,$2=HKLM\\Software\\Phantom\\TestKey}</b><br>The Tanium UI displays the documentation of the package, it's name and parameters.",
+        "type": "generic",
+        "identifier": "execute_action",
+        "read_only": false,
+        "lock": {
+           "enabled": false
+         },
+        "parameters": {
+            "ip_hostname": {
+            "data_type": "string",
+            "order": 0,
+            "description": "Hostname/IP of machine to run action on.",
+            "required": true,
+            "contains": [ "ip", "host name" ]
+          },
+          "package_name": {
+            "data_type": "string",
+            "order": 1,
+            "description": "Name of Tanium package",
+            "required": true,
+            "primary": true
+          }
+        },
+        "render": {
+          "type": "table",
+          "width": 12,
+          "height": 5,
+          "title": "Status"
+        },
+        "output": [
+          {
+            "data_path": "action_result.parameter.ip_hostname",
+            "data_type": "string",
+            "contains": [ "ip", "host name" ],
+            "column_name": "Name/IP Address",
+            "column_order": 0
+          },
+          {
+            "data_path": "action_result.parameter.package_name",
+            "data_type": "string"
+          },
+          {
+            "data_path": "action_result.data",
+            "data_type": "string"
+          },
+          {
+            "data_path": "action_result.summary",
+            "data_type": "string"
+          },
+          {
+            "data_path": "action_result.status",
+            "data_type": "string"
+          },
+          {
+            "data_path": "action_result.message",
+            "data_type": "string",
+            "column_name": "Status",
+            "column_order": 1
           },
           {
             "data_path": "summary.total_objects",
