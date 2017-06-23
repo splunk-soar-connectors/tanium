@@ -191,7 +191,7 @@
       {
         "action": "execute action",
         "description": "Execute Tanium action (package)",
-        "verbose": "Use this action to run packages on endpoints. You will require to know the Package name and the parameters to pass.<br>For example the <b>Registry - Create Key</b> package is used to create a Registry key on an endpoint. It takes two parameters<ul><li><b>$1</b> is the Architecture</li> and <li><b>$2</b> is the Registry Key Name</li></ul>So use the <b>execute action</b> action with the <b>package_name</b> set to:<br><b>Registry - Create Key{$1=64,$2=HKLM\\Software\\Phantom\\TestKey}</b><br>The Tanium UI displays the documentation of the package, it's name and parameters.",
+        "verbose": "Use this action to run packages on endpoints. You will require to know the Package name and the parameters to pass.<br>For example the <b>Registry - Create Key</b> package is used to create a Registry key on an endpoint. It takes two parameters<ul><li><b>$1</b> is the Architecture</li> and <li><b>$2</b> is the Registry Key Name</li></ul>So use the <b>execute action</b> action with the <b>package_name</b> set to:<br><b>Registry - Create Key{$1=64,$2=HKLM\\Software\\Phantom\\TestKey}</b><br>The Tanium UI displays the documentation of the package, it's name and parameters.<br>The action behavior depends a lot on the package used. In some cases the action comes back from Tanium as successfull, even though it hasn't been carried out. For instance in the above example the $1 specifies the architecture and $2 is the Key to create. If the HKLM\\Software\\Phantom is not present in the HKLM hive, the package will fail to create the HKLM\\Software\\Phantom\\TestKey key, however the API will return back as completed without errors.",
         "type": "generic",
         "identifier": "execute_action",
         "read_only": false,
@@ -474,53 +474,53 @@
             "primary": true
           }
         },
-  "render": {
-    "width": 12,
-    "title": "Run Custom Query",
-    "type": "table",
-    "height": 5
-  },
-  "output": [
-    {
-      "data_path": "action_result.data.*.question.index",
-      "data_type": "numeric",
-      "column_order": 0,
-      "column_name": "Index"
-    },
-    {
-      "data_path": "action_result.data.*.question.score",
-      "data_type": "numeric",
-      "column_order": 2,
-      "column_name": "Score"
-    },
-    {
-      "data_path": "action_result.data.*.question.question_text",
-      "data_type": "string",
-      "column_order": 1,
-      "column_name": "Question Text",
-      "contains": ["tanium parsed question"]
-    },
-    {
-      "data_path": "action_result.status",
-      "data_type": "string"
-    },
-    {
-      "data_path": "action_result.message",
-      "data_type": "string"
-    },
-    {
-      "data_path": "action_result.parameter.query",
-      "data_type": "string"
-    },
-    {
-      "data_path": "summary.total_objects",
-      "data_type": "numeric"
-    },
-    {
-      "data_path": "action_result.summary",
-      "data_type": "string"
-    }
-  ],
+        "render": {
+          "width": 12,
+          "title": "Run Custom Query",
+          "type": "table",
+          "height": 5
+        },
+        "output": [
+          {
+            "data_path": "action_result.data.*.question.index",
+            "data_type": "numeric",
+            "column_order": 0,
+            "column_name": "Index"
+          },
+          {
+            "data_path": "action_result.data.*.question.score",
+            "data_type": "numeric",
+            "column_order": 2,
+            "column_name": "Score"
+          },
+          {
+            "data_path": "action_result.data.*.question.question_text",
+            "data_type": "string",
+            "column_order": 1,
+            "column_name": "Question Text",
+            "contains": ["tanium parsed question"]
+          },
+          {
+            "data_path": "action_result.status",
+            "data_type": "string"
+          },
+          {
+            "data_path": "action_result.message",
+            "data_type": "string"
+          },
+          {
+            "data_path": "action_result.parameter.query",
+            "data_type": "string"
+          },
+          {
+            "data_path": "summary.total_objects",
+            "data_type": "numeric"
+          },
+          {
+            "data_path": "action_result.summary",
+            "data_type": "string"
+          }
+        ],
         "versions": "EQ(*)"
       }
     ]
