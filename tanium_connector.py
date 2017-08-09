@@ -25,7 +25,6 @@ import requests
 from pytanlib import pytan
 import os
 import json
-requests.packages.urllib3.disable_warnings()
 
 
 class TaniumConnector(BaseConnector):
