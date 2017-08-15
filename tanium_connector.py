@@ -21,11 +21,9 @@ from phantom.action_result import ActionResult
 # THIS Connector imports
 from tanium_consts import *
 
-import requests
 from pytanlib import pytan
 import os
 import json
-requests.packages.urllib3.disable_warnings()
 
 
 class TaniumConnector(BaseConnector):
