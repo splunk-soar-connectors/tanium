@@ -12,516 +12,557 @@
     "product_name": "Tanium",
     "product_version_regex": ".*",
     "min_phantom_version": "3.0.190",
-    "logo": "tanium.png",
+    "logo": "logo_tanium.svg",
+    "logo_dark": "logo_tanium_dark.svg",
     "license": "Copyright (c) Phantom Cyber Corporation 2015-2017",
     "configuration": {
-      "device": {
-        "data_type": "string",
-        "order": 0,
-        "description": "Device IP/Hostname",
-        "required": true
-      },
-      "port": {
-        "data_type": "string",
-        "description": "Port",
-        "required": false,
-        "order": 1,
-        "default": "443"
-      },
-      "verify_server_cert": {
-        "data_type": "boolean",
-        "description": "Verify server certificate",
-        "required": true,
-        "order": 2,
-        "default": false
-      },
-      "ph": {
-        "data_type": "ph",
-        "order": 3
-      },
-      "username": {
-        "data_type": "string",
-        "order": 4,
-        "description": "Username",
-        "optional": true
-      },
-      "password": {
-        "data_type": "password",
-        "order": 5,
-        "description": "Password",
-        "optional": true
-      }
+        "device": {
+            "data_type": "string",
+            "order": 0,
+            "description": "Device IP/Hostname",
+            "required": true
+        },
+        "port": {
+            "data_type": "string",
+            "description": "Port",
+            "required": false,
+            "order": 1,
+            "default": "443"
+        },
+        "verify_server_cert": {
+            "data_type": "boolean",
+            "description": "Verify server certificate",
+            "required": true,
+            "order": 2,
+            "default": false
+        },
+        "ph": {
+            "data_type": "ph",
+            "order": 3
+        },
+        "username": {
+            "data_type": "string",
+            "order": 4,
+            "description": "Username",
+            "optional": true
+        },
+        "password": {
+            "data_type": "password",
+            "order": 5,
+            "description": "Password",
+            "optional": true
+        }
     },
     "actions": [
-      {
-        "action": "test connectivity",
-        "description": "Validate the asset configuration for connectivity. This action runs a quick query on the device to check the connection and credentials.",
-        "type": "test",
-        "identifier": "test_asset_connectivity",
-        "read_only": true,
-        "parameters": {
+        {
+            "action": "test connectivity",
+            "description": "Validate the asset configuration for connectivity. This action runs a quick query on the device to check the connection and credentials.",
+            "type": "test",
+            "identifier": "test_asset_connectivity",
+            "read_only": true,
+            "parameters": {},
+            "output": [],
+            "versions": "EQ(*)"
         },
-        "output": [],
-        "versions":"EQ(*)"
-      },
-      {
-        "action": "list questions",
-        "description": "List the saved questions on the box",
-        "type": "investigate",
-        "identifier": "list_saved_questions",
-        "read_only": true,
-        "parameters": {
+        {
+            "action": "list questions",
+            "description": "List the saved questions on the box",
+            "type": "investigate",
+            "identifier": "list_saved_questions",
+            "read_only": true,
+            "parameters": {},
+            "render": {
+                "type": "table",
+                "width": 12,
+                "height": 5,
+                "title": "List Questions"
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.name",
+                    "data_type": "string",
+                    "column_name": "Name",
+                    "contains": [
+                        "tanium question"
+                    ],
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.data.*.query_text",
+                    "data_type": "string",
+                    "column_name": "Question Text",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.data.*.id",
+                    "data_type": "string",
+                    "column_name": "Id",
+                    "column_order": 2
+                },
+                {
+                    "data_path": "action_result.summary.total_saved_questions",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "versions": "EQ(*)"
         },
-        "render": {
-          "type": "table",
-          "width": 12,
-          "height": 5,
-          "title": "List Questions"
+        {
+            "action": "run query",
+            "description": "Run a saved or parsed question",
+            "verbose": "<p>The <b>run query</b> action can be used to run either a saved question or a parsed question.</p><p>A saved question is a commonly asked question that had been saved by any of the operators on the Tanium platform.  Saved questions can be ones that Tanium added by default, or custom questions that operators on the Tanium platform regularly use.</p><p>A parsed question is a little more complex.  The Tanium platform will not process questions unless they are saved by an operator on the platform, or is one of the default Tanium questions.  But thankfully, Tanium, when asked a non-saved question, will parse the question it is given, and give a list of suggestions that are related to the question it's given.</p><p>For example, on the Tanium platform, if one were to just ask the question, 'all IP addresses,' Tanium will give the suggestions:<br><ul><li>Get Static IP Addresses from all machines</li><li>Get IP Routes from all machines</li><li>Get IP Address from all machines</li><li>Get IP Connections from all machines</li><li>Get IP Route Details from all machines</li><li>Get Network IP Gateway from all machines</li></ul><br>Tanium sorts this list, from most-related to least-related.  That is, the option at the top of the list, which in this case is 'Get Static IP Addresses from all machines', is considered most-related to the given question 'all ip addresses.'<br>This functionality is reflected within the action <b>parse question</b>.</p><p>When the <b>is_parsed</b> box is checked (by default, it is not), the '<b>run query</b>' action behaves differently.  Instead of considering the question as a 'saved question', it will first ask the Tanium platform to return a list of the questions related to the one it is given.  It will then choose the most-related question from the list (the one at the top), and run that question.</p><p>Chaining results from the <b>parse question</b> action is highly recommended.  Questions in the action result of <b>parse question</b> are, not surprisingly, already parsed. As a result, using <b>run query</b> on a parsed question will ensure that the top result in the list is the question that is given.</p><p>For example, giving the <b>query</b> 'all IP addresses' to the <b>parse question</b> will return the same list as above in an action result.  Similarly, giving the parsed query 'Get Static IP Addresses from all machines' to <b>parse question</b> will have 'Get Static IP Addresses from all machines' at the top as well.</p><p>By parsing the question Tanium is given, Tanium gives back questions that it knows it will understand.  And by giving Tanium a question that it knows it will understand (by using <b>parse question</b>), using the <b>run query</b> action with the <b>is_parsed</b> option checked/True, Tanium will be guaranteed to run the question, without having to save it.</p>",
+            "type": "investigate",
+            "identifier": "execute_question",
+            "read_only": true,
+            "parameters": {
+                "query": {
+                    "data_type": "string",
+                    "order": 0,
+                    "description": "Saved question to execute",
+                    "contains": [
+                        "tanium question",
+                        "tanium parsed question"
+                    ],
+                    "required": true,
+                    "primary": true
+                },
+                "is_parsed": {
+                    "order": 1,
+                    "description": "Parsed question",
+                    "required": false,
+                    "data_type": "boolean"
+                }
+            },
+            "render": {
+                "type": "custom",
+                "width": 10,
+                "height": 5,
+                "view": "tanium_view.tanium_ques_results",
+                "title": "Question Result"
+            },
+            "output": [
+                {
+                    "data_path": "action_result.data.*.rows",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.columns",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary.number_of_results_found",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.parameter.query",
+                    "data_type": "string",
+                    "contains": [
+                        "tanium question",
+                        "tanium parsed question"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.is_parsed",
+                    "data_type": "boolean"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "versions": "EQ(*)"
         },
-        "output": [
-          {
-            "data_path": "action_result.status",
-            "data_type": "string"
-          },
-          {
-            "data_path": "action_result.data.*.name",
-            "data_type": "string",
-            "column_name": "Name",
-            "contains": ["tanium question"],
-            "column_order": 0
-          },
-          {
-            "data_path": "action_result.data.*.query_text",
-            "data_type": "string",
-            "column_name": "Question Text",
-            "column_order": 1
-          },
-          {
-            "data_path": "action_result.data.*.id",
-            "data_type": "string",
-            "column_name": "Id",
-            "column_order": 2
-          },
-          {
-            "data_path": "action_result.summary.total_saved_questions",
-            "data_type": "numeric"
-          },
-          {
-            "data_path": "summary.total_objects",
-            "data_type": "numeric"
-          },
-          {
-            "data_path": "summary.total_objects_successful",
-            "data_type": "numeric"
-          }
-        ],
-        "versions": "EQ(*)"
-      },
-      {
-        "action": "run query",
-        "description": "Run a saved or parsed question",
-        "verbose": "<p>The <b>run query</b> action can be used to run either a saved question or a parsed question.</p><p>A saved question is a commonly asked question that had been saved by any of the operators on the Tanium platform.  Saved questions can be ones that Tanium added by default, or custom questions that operators on the Tanium platform regularly use.</p><p>A parsed question is a little more complex.  The Tanium platform will not process questions unless they are saved by an operator on the platform, or is one of the default Tanium questions.  But thankfully, Tanium, when asked a non-saved question, will parse the question it is given, and give a list of suggestions that are related to the question it's given.</p><p>For example, on the Tanium platform, if one were to just ask the question, 'all IP addresses,' Tanium will give the suggestions:<br><ul><li>Get Static IP Addresses from all machines</li><li>Get IP Routes from all machines</li><li>Get IP Address from all machines</li><li>Get IP Connections from all machines</li><li>Get IP Route Details from all machines</li><li>Get Network IP Gateway from all machines</li></ul><br>Tanium sorts this list, from most-related to least-related.  That is, the option at the top of the list, which in this case is 'Get Static IP Addresses from all machines', is considered most-related to the given question 'all ip addresses.'<br>This functionality is reflected within the action <b>parse question</b>.</p><p>When the <b>is_parsed</b> box is checked (by default, it is not), the '<b>run query</b>' action behaves differently.  Instead of considering the question as a 'saved question', it will first ask the Tanium platform to return a list of the questions related to the one it is given.  It will then choose the most-related question from the list (the one at the top), and run that question.</p><p>Chaining results from the <b>parse question</b> action is highly recommended.  Questions in the action result of <b>parse question</b> are, not surprisingly, already parsed. As a result, using <b>run query</b> on a parsed question will ensure that the top result in the list is the question that is given.</p><p>For example, giving the <b>query</b> 'all IP addresses' to the <b>parse question</b> will return the same list as above in an action result.  Similarly, giving the parsed query 'Get Static IP Addresses from all machines' to <b>parse question</b> will have 'Get Static IP Addresses from all machines' at the top as well.</p><p>By parsing the question Tanium is given, Tanium gives back questions that it knows it will understand.  And by giving Tanium a question that it knows it will understand (by using <b>parse question</b>), using the <b>run query</b> action with the <b>is_parsed</b> option checked/True, Tanium will be guaranteed to run the question, without having to save it.</p>",
-        "type": "investigate",
-        "identifier": "execute_question",
-        "read_only": true,
-        "parameters": {
-          "query": {
-            "data_type": "string",
-            "order": 0,
-            "description": "Saved question to execute",
-            "contains": ["tanium question", "tanium parsed question"],
-            "required": true,
-            "primary": true
-          },
-          "is_parsed": {
-            "order": 1,
-            "description": "Parsed question",
-            "required": false,
-            "data_type": "boolean"
-          }
+        {
+            "action": "execute action",
+            "description": "Execute Tanium action (package)",
+            "verbose": "Use this action to run packages on endpoints. You will be required to know the Package name and the parameters to pass.<br>For example the <b>Registry - Create Key</b> package is used to create a Registry key on an endpoint. It takes two parameters<ul><li><b>$1</b> is the Architecture</li> and <li><b>$2</b> is the Registry Key Name</li></ul>So use the <b>execute action</b> action with the <b>package_name</b> set to:<br><b>Registry - Create Key{$1=64,$2=HKLM\\Software\\Phantom\\TestKey}</b><br>The Tanium UI displays the documentation of the package, its name, and parameters.<br>The action behavior depends a lot on the package used. In most cases the action status pertains to if the package was executed or not, i.e. the Tanium API will treat the execution of the package as successful. For instance, in the above example $1 specifies the architecture and $2 is the key to create. If the HKLM\\Software\\Phantom key is not present in the HKLM hive, the package will fail to create the HKLM\\Software\\Phantom\\TestKey key, however the API will return a success since an attempt was made.",
+            "type": "generic",
+            "identifier": "execute_action",
+            "read_only": false,
+            "lock": {
+                "enabled": false
+            },
+            "parameters": {
+                "ip_hostname": {
+                    "data_type": "string",
+                    "order": 0,
+                    "description": "Hostname/IP of machine to run action on.",
+                    "required": true,
+                    "contains": [
+                        "ip",
+                        "host name"
+                    ]
+                },
+                "package_name": {
+                    "data_type": "string",
+                    "order": 1,
+                    "description": "Name of Tanium package",
+                    "required": true,
+                    "primary": true
+                }
+            },
+            "render": {
+                "type": "table",
+                "width": 12,
+                "height": 5,
+                "title": "Status"
+            },
+            "output": [
+                {
+                    "data_path": "action_result.parameter.ip_hostname",
+                    "data_type": "string",
+                    "contains": [
+                        "ip",
+                        "host name"
+                    ],
+                    "column_name": "Name/IP Address",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.parameter.package_name",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "column_name": "Status",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "versions": "EQ(*)"
         },
-        "render": {
-          "type": "custom",
-          "width": 10,
-          "height": 5,
-          "view": "tanium_view.tanium_ques_results",
-          "title": "Question Result"
+        {
+            "action": "reboot system",
+            "description": "Reboots the system",
+            "type": "contain",
+            "identifier": "reboot_system",
+            "read_only": false,
+            "parameters": {
+                "ip_hostname": {
+                    "data_type": "string",
+                    "order": 0,
+                    "description": "Hostname/IP of machine to reboot",
+                    "required": true,
+                    "primary": true,
+                    "contains": [
+                        "ip",
+                        "host name"
+                    ]
+                }
+            },
+            "render": {
+                "type": "table",
+                "width": 12,
+                "height": 5,
+                "title": "Status"
+            },
+            "output": [
+                {
+                    "data_path": "action_result.parameter.ip_hostname",
+                    "data_type": "string",
+                    "contains": [
+                        "ip",
+                        "host name"
+                    ],
+                    "column_name": "Name/IP Address",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.data",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "column_name": "Status",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "versions": "EQ(*)"
         },
-        "output": [
-          {
-            "data_path": "action_result.data.*.rows",
-            "data_type": "string"
-          },
-          {
-            "data_path": "action_result.data.*.columns",
-            "data_type": "string"
-          },
-          {
-            "data_path": "action_result.status",
-            "data_type": "string"
-          },
-          {
-            "data_path": "action_result.message",
-            "data_type": "string"
-          },
-          {
-            "data_path": "action_result.summary.number_of_results_found",
-            "data_type": "numeric"
-          },
-          {
-            "data_path": "action_result.parameter.query",
-            "data_type": "string",
-            "contains": ["tanium question", "tanium parsed question"]
-          },
-          {
-            "data_path": "action_result.parameter.is_parsed",
-            "data_type": "boolean"
-          },
-          {
-            "data_path": "summary.total_objects",
-            "data_type": "numeric"
-          },
-          {
-            "data_path": "summary.total_objects_successful",
-            "data_type": "numeric"
-          }
-        ],
-        "versions": "EQ(*)"
-      },      
-      {
-        "action": "execute action",
-        "description": "Execute Tanium action (package)",
-        "verbose": "Use this action to run packages on endpoints. You will be required to know the Package name and the parameters to pass.<br>For example the <b>Registry - Create Key</b> package is used to create a Registry key on an endpoint. It takes two parameters<ul><li><b>$1</b> is the Architecture</li> and <li><b>$2</b> is the Registry Key Name</li></ul>So use the <b>execute action</b> action with the <b>package_name</b> set to:<br><b>Registry - Create Key{$1=64,$2=HKLM\\Software\\Phantom\\TestKey}</b><br>The Tanium UI displays the documentation of the package, its name, and parameters.<br>The action behavior depends a lot on the package used. In most cases the action status pertains to if the package was executed or not, i.e. the Tanium API will treat the execution of the package as successful. For instance, in the above example $1 specifies the architecture and $2 is the key to create. If the HKLM\\Software\\Phantom key is not present in the HKLM hive, the package will fail to create the HKLM\\Software\\Phantom\\TestKey key, however the API will return a success since an attempt was made.",
-        "type": "generic",
-        "identifier": "execute_action",
-        "read_only": false,
-        "lock": {
-           "enabled": false
-         },
-        "parameters": {
-            "ip_hostname": {
-            "data_type": "string",
-            "order": 0,
-            "description": "Hostname/IP of machine to run action on.",
-            "required": true,
-            "contains": [ "ip", "host name" ]
-          },
-          "package_name": {
-            "data_type": "string",
-            "order": 1,
-            "description": "Name of Tanium package",
-            "required": true,
-            "primary": true
-          }
+        {
+            "action": "list processes",
+            "description": "List the running processes on a machine",
+            "type": "contain",
+            "identifier": "list_processes",
+            "read_only": false,
+            "parameters": {
+                "ip_hostname": {
+                    "data_type": "string",
+                    "order": 0,
+                    "description": "Hostname/IP to list process on",
+                    "contains": [
+                        "ip",
+                        "host name"
+                    ],
+                    "required": true
+                }
+            },
+            "render": {
+                "type": "table",
+                "width": 10,
+                "height": 5,
+                "title": "List Process"
+            },
+            "output": [
+                {
+                    "data_path": "action_result.data.*.name",
+                    "data_type": "string",
+                    "column_name": "Process Name",
+                    "contains": [
+                        "process name"
+                    ],
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.data.*.count",
+                    "data_type": "string",
+                    "column_name": "Count",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary.query_text",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary.number_of_results_found",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.parameter.ip_hostname",
+                    "data_type": "string",
+                    "contains": [
+                        "ip",
+                        "host name"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "versions": "EQ(*)"
         },
-        "render": {
-          "type": "table",
-          "width": 12,
-          "height": 5,
-          "title": "Status"
+        {
+            "action": "terminate process",
+            "description": "Terminate a process",
+            "type": "contain",
+            "identifier": "terminate_process",
+            "read_only": false,
+            "parameters": {
+                "ip_hostname": {
+                    "data_type": "string",
+                    "order": 0,
+                    "description": "Hostname/IP to terminate process on",
+                    "contains": [
+                        "ip",
+                        "host name"
+                    ],
+                    "required": true
+                },
+                "name": {
+                    "description": "Name of process to terminate",
+                    "data_type": "string",
+                    "order": 1,
+                    "contains": [
+                        "file name",
+                        "process name"
+                    ],
+                    "required": true,
+                    "primary": true
+                }
+            },
+            "render": {
+                "type": "table",
+                "width": 12,
+                "height": 5,
+                "title": "Status"
+            },
+            "output": [
+                {
+                    "data_path": "action_result.parameter.name",
+                    "data_type": "string",
+                    "contains": [
+                        "file name",
+                        "process name"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.ip_hostname",
+                    "data_type": "string",
+                    "contains": [
+                        "ip",
+                        "host name"
+                    ],
+                    "column_name": "Name/IP Address",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.data",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "column_name": "Status",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "versions": "EQ(*)"
         },
-        "output": [
-          {
-            "data_path": "action_result.parameter.ip_hostname",
-            "data_type": "string",
-            "contains": [ "ip", "host name" ],
-            "column_name": "Name/IP Address",
-            "column_order": 0
-          },
-          {
-            "data_path": "action_result.parameter.package_name",
-            "data_type": "string"
-          },
-          {
-            "data_path": "action_result.data",
-            "data_type": "string"
-          },
-          {
-            "data_path": "action_result.summary",
-            "data_type": "string"
-          },
-          {
-            "data_path": "action_result.status",
-            "data_type": "string"
-          },
-          {
-            "data_path": "action_result.message",
-            "data_type": "string",
-            "column_name": "Status",
-            "column_order": 1
-          },
-          {
-            "data_path": "summary.total_objects",
-            "data_type": "numeric"
-          },
-          {
-            "data_path": "summary.total_objects_successful",
-            "data_type": "numeric"
-          }
-        ],
-        "versions": "EQ(*)"
-      },
-      {
-        "action": "reboot system",
-        "description": "Reboots the system",
-        "type": "contain",
-        "identifier": "reboot_system",
-        "read_only": false,
-        "parameters": {
-          "ip_hostname": {
-            "data_type": "string",
-            "order": 0,
-            "description": "Hostname/IP of machine to reboot",
-            "required": true,
-            "primary": true,
-            "contains": [ "ip", "host name" ]
-          }
-        },
-        "render": {
-          "type": "table",
-          "width": 12,
-          "height": 5,
-          "title": "Status"
-        },
-        "output": [
-          {
-            "data_path": "action_result.parameter.ip_hostname",
-            "data_type": "string",
-            "contains": [ "ip", "host name" ],
-            "column_name": "Name/IP Address",
-            "column_order": 0
-          },
-          {
-            "data_path": "action_result.data",
-            "data_type": "string"
-          },
-          {
-            "data_path": "action_result.summary",
-            "data_type": "string"
-          },
-          {
-            "data_path": "action_result.status",
-            "data_type": "string"
-          },
-          {
-            "data_path": "action_result.message",
-            "data_type": "string",
-            "column_name": "Status",
-            "column_order": 1
-          },
-          {
-            "data_path": "summary.total_objects",
-            "data_type": "numeric"
-          },
-          {
-            "data_path": "summary.total_objects_successful",
-            "data_type": "numeric"
-          }
-        ],
-        "versions": "EQ(*)"
-      },
-      {
-        "action": "list processes",
-        "description": "List the running processes on a machine",
-        "type": "contain",
-        "identifier": "list_processes",
-        "read_only": false,
-        "parameters": {
-          "ip_hostname": {
-            "data_type": "string",
-            "order": 0,
-            "description": "Hostname/IP to list process on",
-            "contains": [ "ip", "host name" ],
-            "required": true
-          }
-        },
-        "render": {
-          "type": "table",
-          "width": 10,
-          "height": 5,
-          "title": "List Process"
-        },
-        "output": [
-          {
-            "data_path": "action_result.data.*.name",
-            "data_type": "string",
-            "column_name": "Process Name",
-            "contains": ["process name"],
-            "column_order": 0
-          },
-          {
-            "data_path": "action_result.data.*.count",
-            "data_type": "string",
-            "column_name": "Count",
-            "column_order": 1
-          },
-          {
-            "data_path": "action_result.status",
-            "data_type": "string"
-          },
-          {
-            "data_path": "action_result.message",
-            "data_type": "string"
-          },
-          {
-            "data_path": "action_result.summary.query_text",
-            "data_type": "string"
-          },
-          {
-            "data_path": "action_result.summary.number_of_results_found",
-            "data_type": "numeric"
-          },
-          {
-            "data_path": "action_result.parameter.ip_hostname",
-            "data_type": "string",
-            "contains": [ "ip", "host name" ]
-          },
-          {
-            "data_path": "summary.total_objects",
-            "data_type": "numeric"
-          },
-          {
-            "data_path": "summary.total_objects_successful",
-            "data_type": "numeric"
-          }
-        ],
-        "versions": "EQ(*)"
-      },
-       {
-        "action": "terminate process",
-        "description": "Terminate a process",
-        "type": "contain",
-        "identifier": "terminate_process",
-        "read_only": false,
-        "parameters": {
-          "ip_hostname": {
-            "data_type": "string",
-            "order": 0,
-            "description": "Hostname/IP to terminate process on",
-            "contains": [ "ip", "host name" ],
-            "required": true
-          },
-          "name": {
-            "description": "Name of process to terminate",
-            "data_type": "string",
-            "order": 1,
-            "contains": [ "file name", "process name" ],
-            "required": true,
-            "primary": true
-          }
-        },
-        "render": {
-          "type": "table",
-          "width": 12,
-          "height": 5,
-          "title": "Status"
-        },
-        "output": [
-          {
-            "data_path": "action_result.parameter.name",
-            "data_type": "string",
-            "contains": ["file name", "process name"]
-          },
-          {
-            "data_path": "action_result.parameter.ip_hostname",
-            "data_type": "string",
-            "contains": [ "ip", "host name" ],
-            "column_name": "Name/IP Address",
-            "column_order": 0
-          },
-          {
-            "data_path": "action_result.data",
-            "data_type": "string"
-          },
-          {
-            "data_path": "action_result.summary",
-            "data_type": "string"
-          },
-          {
-            "data_path": "action_result.status",
-            "data_type": "string"
-          },
-          {
-            "data_path": "action_result.message",
-            "data_type": "string",
-            "column_name": "Status",
-            "column_order": 1
-          },
-          {
-            "data_path": "summary.total_objects",
-            "data_type": "numeric"
-          },
-          {
-            "data_path": "summary.total_objects_successful",
-            "data_type": "numeric"
-          }
-        ],
-        "versions": "EQ(*)"
-      },
-      {
-        "action": "parse question",
-        "description": "Retrieves related questions to a possible Tanium question.",
-        "verbose": "<p>The <b>parse question</b> action is what allows the use of custom queries.  Tanium itself does not accept custom queries, and will instead provide suggestions on pre-made queries that Tanium will accept.  The action result contains <b>question_text</b>, which are essentially Tanium-approved questions whose structure best match the query that was given.  The <b>question_text</b> is given the data type of <b>tanium parsed question</b>.  This allows contextual actions to be taken so that the questions can then be used in <b>run query</b>.</p><p>The order of the <b>question_text</b> within the action output is very important.  Tanium scores each parsed question based upon how much it matches the given query.  That is, the higher the score that Tanium has given, the higher it will appear in the list.  Each question in the list is given an index as well.  For example, if given 'ip addresses', Tanium decides that 'Get IP Address from all machines' is the most related - giving it a score of 6031 and an index of 0.  Similarly, the Tanium decides that, though related to 'ip address', the question 'Get Static IP Addresses from all machines' will have a score of 120 and an index of 10.</p>",
-        "type": "investigate",
-        "identifier": "get_parsed_questions",
-        "read_only": true,
-        "parameters": {
-          "query": {
-            "data_type": "string",
-            "order": 0,
-            "description": "Query to find related questions for",
-            "required": true,
-            "primary": true
-          }
-        },
-        "render": {
-          "width": 12,
-          "title": "Run Custom Query",
-          "type": "table",
-          "height": 5
-        },
-        "output": [
-          {
-            "data_path": "action_result.data.*.question.index",
-            "data_type": "numeric",
-            "column_order": 0,
-            "column_name": "Index"
-          },
-          {
-            "data_path": "action_result.data.*.question.score",
-            "data_type": "numeric",
-            "column_order": 2,
-            "column_name": "Score"
-          },
-          {
-            "data_path": "action_result.data.*.question.question_text",
-            "data_type": "string",
-            "column_order": 1,
-            "column_name": "Question Text",
-            "contains": ["tanium parsed question"]
-          },
-          {
-            "data_path": "action_result.status",
-            "data_type": "string"
-          },
-          {
-            "data_path": "action_result.message",
-            "data_type": "string"
-          },
-          {
-            "data_path": "action_result.parameter.query",
-            "data_type": "string"
-          },
-          {
-            "data_path": "summary.total_objects",
-            "data_type": "numeric"
-          },
-          {
-            "data_path": "action_result.summary",
-            "data_type": "string"
-          }
-        ],
-        "versions": "EQ(*)"
-      }
+        {
+            "action": "parse question",
+            "description": "Retrieves related questions to a possible Tanium question.",
+            "verbose": "<p>The <b>parse question</b> action is what allows the use of custom queries.  Tanium itself does not accept custom queries, and will instead provide suggestions on pre-made queries that Tanium will accept.  The action result contains <b>question_text</b>, which are essentially Tanium-approved questions whose structure best match the query that was given.  The <b>question_text</b> is given the data type of <b>tanium parsed question</b>.  This allows contextual actions to be taken so that the questions can then be used in <b>run query</b>.</p><p>The order of the <b>question_text</b> within the action output is very important.  Tanium scores each parsed question based upon how much it matches the given query.  That is, the higher the score that Tanium has given, the higher it will appear in the list.  Each question in the list is given an index as well.  For example, if given 'ip addresses', Tanium decides that 'Get IP Address from all machines' is the most related - giving it a score of 6031 and an index of 0.  Similarly, the Tanium decides that, though related to 'ip address', the question 'Get Static IP Addresses from all machines' will have a score of 120 and an index of 10.</p>",
+            "type": "investigate",
+            "identifier": "get_parsed_questions",
+            "read_only": true,
+            "parameters": {
+                "query": {
+                    "data_type": "string",
+                    "order": 0,
+                    "description": "Query to find related questions for",
+                    "required": true,
+                    "primary": true
+                }
+            },
+            "render": {
+                "width": 12,
+                "title": "Run Custom Query",
+                "type": "table",
+                "height": 5
+            },
+            "output": [
+                {
+                    "data_path": "action_result.data.*.question.index",
+                    "data_type": "numeric",
+                    "column_order": 0,
+                    "column_name": "Index"
+                },
+                {
+                    "data_path": "action_result.data.*.question.score",
+                    "data_type": "numeric",
+                    "column_order": 2,
+                    "column_name": "Score"
+                },
+                {
+                    "data_path": "action_result.data.*.question.question_text",
+                    "data_type": "string",
+                    "column_order": 1,
+                    "column_name": "Question Text",
+                    "contains": [
+                        "tanium parsed question"
+                    ]
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.query",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
+                }
+            ],
+            "versions": "EQ(*)"
+        }
     ]
 }
