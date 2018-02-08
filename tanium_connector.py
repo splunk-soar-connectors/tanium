@@ -1,7 +1,7 @@
 # --
 # File: tanium_connector.py
 #
-# Copyright (c) Phantom Cyber Corporation, 2014-2018
+# Copyright (c) Phantom Cyber Corporation, 2015-2018
 #
 # This unpublished material is proprietary to Phantom Cyber.
 # All rights reserved. The methods and
