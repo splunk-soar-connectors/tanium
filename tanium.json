@@ -80,7 +80,19 @@
             "output": [
                 {
                     "data_path": "action_result.status",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.id",
+                    "data_type": "string",
+                    "column_name": "Id",
+                    "column_order": 2,
+                    "example_values": [
+                        1
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.name",
@@ -89,31 +101,47 @@
                     "contains": [
                         "tanium question"
                     ],
-                    "column_order": 0
+                    "column_order": 0,
+                    "example_values": [
+                        "Has Tanium Standard Utilities"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.query_text",
                     "data_type": "string",
                     "column_name": "Question Text",
-                    "column_order": 1
-                },
-                {
-                    "data_path": "action_result.data.*.id",
-                    "data_type": "string",
-                    "column_name": "Id",
-                    "column_order": 2
+                    "column_order": 1,
+                    "example_values": [
+                        "Get Has Tanium Standard Utilities from all machines"
+                    ]
                 },
                 {
                     "data_path": "action_result.summary.total_saved_questions",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        97
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Total saved questions: 97"
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 }
             ],
             "versions": "EQ(*)"
@@ -153,24 +181,12 @@
             },
             "output": [
                 {
-                    "data_path": "action_result.data.*.rows",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.columns",
-                    "data_type": "string"
-                },
-                {
                     "data_path": "action_result.status",
                     "data_type": "string"
                 },
                 {
-                    "data_path": "action_result.message",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.summary.number_of_results_found",
-                    "data_type": "numeric"
+                    "data_path": "action_result.parameter.is_parsed",
+                    "data_type": "boolean"
                 },
                 {
                     "data_path": "action_result.parameter.query",
@@ -181,8 +197,20 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.parameter.is_parsed",
-                    "data_type": "boolean"
+                    "data_path": "action_result.data.*.columns",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.rows",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary.number_of_results_found",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "summary.total_objects",
@@ -222,6 +250,13 @@
                     "description": "Name of Tanium package",
                     "required": true,
                     "primary": true
+                },
+                "action_group": {
+                    "data_type": "string",
+                    "order": 2,
+                    "description": "Action Group to execute on",
+                    "required": false,
+                    "primary": false
                 }
             },
             "render": {
@@ -232,6 +267,20 @@
             },
             "output": [
                 {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.action_group",
+                    "data_type": "string",
+                    "example_values": [
+                        "WinGroup"
+                    ]
+                },
+                {
                     "data_path": "action_result.parameter.ip_hostname",
                     "data_type": "string",
                     "contains": [
@@ -239,11 +288,17 @@
                         "host name"
                     ],
                     "column_name": "Name/IP Address",
-                    "column_order": 0
+                    "column_order": 0,
+                    "example_values": [
+                        "win7ult32.corp.contoso.com"
+                    ]
                 },
                 {
                     "data_path": "action_result.parameter.package_name",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": [
+                        "Registry - Delete Key{$1=32,$2=HKLM\\Software\\Phantom\\TestKey}"
+                    ]
                 },
                 {
                     "data_path": "action_result.data",
@@ -254,22 +309,83 @@
                     "data_type": "string"
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string"
-                },
-                {
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "column_name": "Status",
-                    "column_order": 1
+                    "column_order": 1,
+                    "example_values": [
+                        "failed: 0, finished: 1, running: 0, success: 1, unknown: 0, Done Key: success, Passed Count: 1\nCompleted\nwin7ult32.corp.contoso.com\n"
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.failed.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.running.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.finished.256:Completed.",
+                    "data_type": "string",
+                    "example_values": [
+                        "win7ult32.corp.contoso.com"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.finished.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.success.256:Completed.",
+                    "data_type": "string",
+                    "example_values": [
+                        "win7ult32.corp.contoso.com"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.success.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.unknown.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "256"
+                    ]
                 }
             ],
             "versions": "EQ(*)"
@@ -291,6 +407,13 @@
                         "ip",
                         "host name"
                     ]
+                },
+                "action_group": {
+                    "data_type": "string",
+                    "order": 1,
+                    "description": "Action Group to execute on",
+                    "required": false,
+                    "primary": false
                 }
             },
             "render": {
@@ -300,6 +423,14 @@
                 "title": "Status"
             },
             "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.action_group",
+                    "data_type": "string"
+                },
                 {
                     "data_path": "action_result.parameter.ip_hostname",
                     "data_type": "string",
@@ -316,10 +447,6 @@
                 },
                 {
                     "data_path": "action_result.summary",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.status",
                     "data_type": "string"
                 },
                 {
@@ -354,7 +481,8 @@
                         "ip",
                         "host name"
                     ],
-                    "required": true
+                    "required": true,
+                    "primary": true
                 }
             },
             "render": {
@@ -365,35 +493,11 @@
             },
             "output": [
                 {
-                    "data_path": "action_result.data.*.name",
-                    "data_type": "string",
-                    "column_name": "Process Name",
-                    "contains": [
-                        "process name"
-                    ],
-                    "column_order": 0
-                },
-                {
-                    "data_path": "action_result.data.*.count",
-                    "data_type": "string",
-                    "column_name": "Count",
-                    "column_order": 1
-                },
-                {
                     "data_path": "action_result.status",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.message",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.summary.query_text",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.summary.number_of_results_found",
-                    "data_type": "numeric"
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
                 },
                 {
                     "data_path": "action_result.parameter.ip_hostname",
@@ -401,15 +505,67 @@
                     "contains": [
                         "ip",
                         "host name"
+                    ],
+                    "example_values": [
+                        "win7ult32.corp.contoso.com"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.count",
+                    "data_type": "string",
+                    "column_name": "Count",
+                    "column_order": 1,
+                    "example_values": [
+                        "1"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.name",
+                    "data_type": "string",
+                    "column_name": "Process Name",
+                    "contains": [
+                        "process name",
+                        "file name"
+                    ],
+                    "column_order": 0,
+                    "example_values": [
+                        "TaniumClient.exe"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.number_of_results_found",
+                    "data_type": "numeric",
+                    "example_values": [
+                        36
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.query_text",
+                    "data_type": "string",
+                    "example_values": [
+                        "Get Running Processes from all machines with Computer Name = \"win7ult32.corp.contoso.com\""
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Number of results found: 36\nQuery text: Get Running Processes from all machines with Computer Name = \"win7ult32.corp.contoso.com\""
                     ]
                 },
                 {
                     "data_path": "summary.total_objects",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 }
             ],
             "versions": "EQ(*)"
@@ -441,6 +597,13 @@
                     ],
                     "required": true,
                     "primary": true
+                },
+                "action_group": {
+                    "data_type": "string",
+                    "order": 2,
+                    "description": "Action Group to execute on",
+                    "required": false,
+                    "primary": false
                 }
             },
             "render": {
@@ -451,11 +614,17 @@
             },
             "output": [
                 {
-                    "data_path": "action_result.parameter.name",
+                    "data_path": "action_result.status",
                     "data_type": "string",
-                    "contains": [
-                        "file name",
-                        "process name"
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.action_group",
+                    "data_type": "string",
+                    "example_values": [
+                        "All Computers"
                     ]
                 },
                 {
@@ -466,7 +635,21 @@
                         "host name"
                     ],
                     "column_name": "Name/IP Address",
-                    "column_order": 0
+                    "column_order": 0,
+                    "example_values": [
+                        "win7ult32.corp.contoso.com"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.name",
+                    "data_type": "string",
+                    "contains": [
+                        "file name",
+                        "process name"
+                    ],
+                    "example_values": [
+                        "notepad.exe"
+                    ]
                 },
                 {
                     "data_path": "action_result.data",
@@ -477,22 +660,83 @@
                     "data_type": "string"
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string"
-                },
-                {
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "column_name": "Status",
-                    "column_order": 1
+                    "column_order": 1,
+                    "example_values": [
+                        "failed: 0, finished: 1, running: 0, success: 1, unknown: 0, Done Key: success, Passed Count: 1\nCompleted\nwin7ult32.corp.contoso.com\n"
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.failed.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.running.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.finished.257:Completed.",
+                    "data_type": "string",
+                    "example_values": [
+                        "win7ult32.corp.contoso.com"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.finished.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.success.257:Completed.",
+                    "data_type": "string",
+                    "example_values": [
+                        "win7ult32.corp.contoso.com"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.success.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.unknown.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "257"
+                    ]
                 }
             ],
             "versions": "EQ(*)"
@@ -521,16 +765,18 @@
             },
             "output": [
                 {
+                    "data_path": "action_result.status",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.query",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.data.*.question.index",
                     "data_type": "numeric",
                     "column_order": 0,
                     "column_name": "Index"
-                },
-                {
-                    "data_path": "action_result.data.*.question.score",
-                    "data_type": "numeric",
-                    "column_order": 2,
-                    "column_name": "Score"
                 },
                 {
                     "data_path": "action_result.data.*.question.question_text",
@@ -542,7 +788,13 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
+                    "data_path": "action_result.data.*.question.score",
+                    "data_type": "numeric",
+                    "column_order": 2,
+                    "column_name": "Score"
+                },
+                {
+                    "data_path": "action_result.summary",
                     "data_type": "string"
                 },
                 {
@@ -550,16 +802,8 @@
                     "data_type": "string"
                 },
                 {
-                    "data_path": "action_result.parameter.query",
-                    "data_type": "string"
-                },
-                {
                     "data_path": "summary.total_objects",
                     "data_type": "numeric"
-                },
-                {
-                    "data_path": "action_result.summary",
-                    "data_type": "string"
                 }
             ],
             "versions": "EQ(*)"
