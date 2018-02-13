@@ -1,7 +1,7 @@
 # --
 # File: tanium_connector.py
 #
-# Copyright (c) Phantom Cyber Corporation, 2015-2018
+# Copyright (c) Phantom Cyber Corporation, 2014-2018
 #
 # This unpublished material is proprietary to Phantom Cyber.
 # All rights reserved. The methods and
@@ -429,11 +429,12 @@ class TaniumConnector(BaseConnector):
 
         action_result.set_status(phantom.APP_SUCCESS, "Endpoint Filter: " + str(endpoint_filter))
 
-        self._deploy_action(endpoint_filter, package_name, action_name, ACTION_COMMENT.format(container_id=container_id), action_result)
+        self._deploy_action(endpoint_filter, package_name, action_name, ACTION_COMMENT.format(container_id=container_id), action_result,
+                action_group=param.get('action_group'))
 
         return action_result.get_status()
 
-    def _deploy_action(self, action_filters, package, name, comment, action_result):
+    def _deploy_action(self, action_filters, package, name, comment, action_result, action_group):
 
         ret_val, handler = self._create_handler(action_result)
 
@@ -447,6 +448,9 @@ class TaniumConnector(BaseConnector):
         kwargs["package"] = package
         kwargs["action_name"] = name
         kwargs["action_comment"] = comment
+
+        if (action_group):
+            kwargs['action_group'] = action_group
 
         self.save_progress("Deploying Action on Tanium")
 
@@ -488,7 +492,8 @@ class TaniumConnector(BaseConnector):
         if (not phantom.is_ip(ip_hostname)):
             endpoint_filter = MACHINE_NAME_ACTION_FILTER.format(ip_hostname=ip_hostname)
 
-        self._deploy_action(endpoint_filter, KILL_PROC_PACKAGE.format(proc_name=proc_name), ACTION_NAME_TERM_PROC, ACTION_COMMENT.format(container_id=container_id), action_result)
+        self._deploy_action(endpoint_filter, KILL_PROC_PACKAGE.format(proc_name=proc_name), ACTION_NAME_TERM_PROC, ACTION_COMMENT.format(container_id=container_id), action_result,
+                action_group=param.get('action_group'))
 
         return action_result.get_status()
 
@@ -502,7 +507,8 @@ class TaniumConnector(BaseConnector):
         if (not phantom.is_ip(ip_hostname)):
             endpoint_filter = MACHINE_NAME_ACTION_FILTER.format(ip_hostname=ip_hostname)
 
-        self._deploy_action(endpoint_filter, REBOOT_SYS_PACKAGE, ACTION_NAME_REBOOT_SYS, ACTION_COMMENT.format(container_id=container_id), action_result)
+        self._deploy_action(endpoint_filter, REBOOT_SYS_PACKAGE, ACTION_NAME_REBOOT_SYS, ACTION_COMMENT.format(container_id=container_id), action_result,
+                action_group=param.get('action_group'))
 
         return action_result.get_status()
 

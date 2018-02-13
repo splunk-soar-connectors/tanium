@@ -1,4 +1,4 @@
 [submodule "pytanlib"]
 	path = pytanlib
-	url = ssh://git@prod-bb-1.phantom.local:7999/PER/pytan.git
-	branch = phantom-pytan
+	url = ssh://git@prod-bb-1.phantom.local:7999/per/pytan-2.2.2.git
+	ignore = dirty
