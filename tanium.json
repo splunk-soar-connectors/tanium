@@ -743,7 +743,7 @@
         },
         {
             "action": "manual query",
-            "description": "Ask a Manual question no parseing",
+            "description": "Ask a Manual question no parsing",
             "verbose": "<p>The <b>manual query</b>asks a human readable string to in turn ask Tanium a question. The question is broken into three different parameters Response - this is what you are request back from Tanium this is ingested as a string of options seperated by a ';' Ex. Computer Name; IP Address would return both Computer names and IP address Question filter - this is the filter to pass to Tanium to have mutiple filters use the simi colan to seperate mutiple filters Ex. Operating Systen, that contains:Windows; Operating System, that contains:Linux Options - This the option passed to Tanium examples of options <or/and> and more",
             "type": "investigate",
             "identifier": "manual_query",

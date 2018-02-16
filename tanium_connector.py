@@ -439,32 +439,26 @@ class TaniumConnector(BaseConnector):
     def _manual_query(self, param):
 
         action_result = self.add_action_result(ActionResult(param))
-        rows = []
-        columns = []
 
         ret_val, handler = self._create_handler(action_result)
 
         if (phantom.is_fail(ret_val)):
-            return (action_result.get_status(), rows, columns)
+            return (action_result.get_status())
 
         self.save_progress("Querying Tanium")
-        # response_question = param['query_response']
-        string_response = str(param['left_side'])
+        string_response = param['left_side']
         response_list = string_response.split(";")
-        response_filter = []
         for response in response_list:
-            self.debug_print("right_side= ", response)
-            response_filter.append(response)
-        query_question = param['right_side']
-        string_question = str(param['right_side'])
-        question_list = string_question.split(";")
-        query_question = []
-        for query in question_list:
-            self.debug_print("left_side = ", query)
-            query_question.append(query)
-        question_options = param['query_options']
+            self.debug_print("left_side= ", response)
 
-        ret_val, rows, columns = self._ask_manual_question(response_filter, query_question, question_options,
+        query_question = param.get('right_side')
+        question_list = query_question.split(";")
+        for query in question_list:
+            self.debug_print("right_side = ", query)
+
+        question_options = param.get('query_options')
+
+        ret_val, rows, columns = self._ask_manual_question(response_list, question_list, question_options,
                                                            action_result)
 
         if (not ret_val):
