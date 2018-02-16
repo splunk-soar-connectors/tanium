@@ -742,6 +742,153 @@
             "versions": "EQ(*)"
         },
         {
+            "action": "manual query",
+            "description": "Ask a Manual question no parseing",
+            "verbose": "<p>The <b>manual query</b>asks a human readable string to in turn ask Tanium a question. The question is broken into three different parameters Response - this is what you are request back from Tanium this is ingested as a string of options seperated by a ';' Ex. Computer Name; IP Address would return both Computer names and IP address Question filter - this is the filter to pass to Tanium to have mutiple filters use the simi colan to seperate mutiple filters Ex. Operating Systen, that contains:Windows; Operating System, that contains:Linux Options - This the option passed to Tanium examples of options <or/and> and more",
+            "type": "investigate",
+            "identifier": "manual_query",
+            "read_only": true,
+            "parameters": {
+                "left_side": {
+                    "data_type": "string",
+                    "order": 0,
+                    "description": "Tanium Response set",
+                    "contains": [
+                        "tanium response"
+                    ],
+                    "required": true,
+                    "primary": true
+                },
+                "right_side": {
+                    "data_type": "string",
+                    "order": 1,
+                    "description": "The filter for the Tanium question",
+                    "contains": [
+                        "tanium filter"
+                    ],
+                    "required": false,
+                    "primary": true
+                },
+                "query_options": {
+                    "data_type": "string",
+                    "order": 2,
+                    "description": "Options for Tanium question",
+                    "contains": [
+                        "tanium options"
+                    ],
+                    "required": false,
+                    "primary": true,
+                    "default": [
+                        "and",
+                        "or"
+                    ]
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.count",
+                    "data_type": "string",
+                    "example_values": [
+                        "10.17.1.56"
+                    ],
+                    "contains": [
+                        "ip"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "xpprox64.corp.contoso.com"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Number of results found: 7\nQuery text: Get Computer Name and IP Address from all machines with ( Operating System containing \"Windows\" or Operating System containing \"Linux\" )"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.left_side",
+                    "data_type": "string",
+                    "example_values": [
+                        "Computer Name;IP Address"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.right_side",
+                    "data_type": "string",
+                    "example_values": [
+                        "Operating System, that contains:Windows; Operating System, that contains:Linux"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.query_options",
+                    "data_type": "string",
+                    "example_values": [
+                        "or"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.query_text",
+                    "data_type": "string",
+                    "example_values": [
+                        "Get Computer Name and IP Address from all machines with ( Operating System containing \"Windows\" or Operating System containing \"Linux\" )"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.number_of_results_found",
+                    "data_type": "numeric",
+                    "example_values": [
+                        7
+                    ]
+                },
+                {
+                  "data_path": "action_result.data.*.count",
+                  "data_type": "string",
+                  "column_name": "",
+                  "column_order": 0,
+                  "example_values": []
+                },
+                {
+                  "data_path": "action_result.data.*.name",
+                  "data_type": "string",
+                  "column_name": "",
+                  "column_order": 1,
+                  "example_values": []
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "versions": "EQ(*)",
+            "render": {
+                "width": 12,
+                "title": "Manual Query",
+                "type": "table",
+                "height": 5
+            }
+        },
+        {
             "action": "parse question",
             "description": "Retrieves related questions to a possible Tanium question.",
             "verbose": "<p>The <b>parse question</b> action is what allows the use of custom queries.  Tanium itself does not accept custom queries, and will instead provide suggestions on pre-made queries that Tanium will accept.  The action result contains <b>question_text</b>, which are essentially Tanium-approved questions whose structure best match the query that was given.  The <b>question_text</b> is given the data type of <b>tanium parsed question</b>.  This allows contextual actions to be taken so that the questions can then be used in <b>run query</b>.</p><p>The order of the <b>question_text</b> within the action output is very important.  Tanium scores each parsed question based upon how much it matches the given query.  That is, the higher the score that Tanium has given, the higher it will appear in the list.  Each question in the list is given an index as well.  For example, if given 'ip addresses', Tanium decides that 'Get IP Address from all machines' is the most related - giving it a score of 6031 and an index of 0.  Similarly, the Tanium decides that, though related to 'ip address', the question 'Get Static IP Addresses from all machines' will have a score of 120 and an index of 10.</p>",

@@ -36,6 +36,7 @@ class TaniumConnector(BaseConnector):
     ACTION_ID_LIST_PROCESSES = "list_processes"
     ACTION_ID_EXECUTE_CUSTOM_QUESTION = "get_parsed_questions"
     ACTION_ID_EXECUTE_ACTION = "execute_action"
+    ACTION_ID_MANUAL_QUERY = "manual_query"
     call_index = 0
 
     def __init__(self):
@@ -340,7 +341,7 @@ class TaniumConnector(BaseConnector):
 
         return phantom.APP_SUCCESS
 
-    def _ask_manual_question(self, sensors, question_filters, action_result):
+    def _ask_manual_question(self, sensors, question_filters, question_options, action_result):
 
         rows = []
         columns = []
@@ -355,6 +356,7 @@ class TaniumConnector(BaseConnector):
         kwargs["qtype"] = u'manual'
         kwargs["question_filters"] = question_filters
         kwargs["sensors"] = sensors
+        kwargs["question_options"] = question_options
 
         # kwargs["callback"] = {'ProgressChanged': self._question_progress}
 
@@ -433,6 +435,47 @@ class TaniumConnector(BaseConnector):
                 action_group=param.get('action_group'))
 
         return action_result.get_status()
+
+    def _manual_query(self, param):
+
+        action_result = self.add_action_result(ActionResult(param))
+        rows = []
+        columns = []
+
+        ret_val, handler = self._create_handler(action_result)
+
+        if (phantom.is_fail(ret_val)):
+            return (action_result.get_status(), rows, columns)
+
+        self.save_progress("Querying Tanium")
+        # response_question = param['query_response']
+        string_response = str(param['left_side'])
+        response_list = string_response.split(";")
+        response_filter = []
+        for response in response_list:
+            self.debug_print("right_side= ", response)
+            response_filter.append(response)
+        query_question = param['right_side']
+        string_question = str(param['right_side'])
+        question_list = string_question.split(";")
+        query_question = []
+        for query in question_list:
+            self.debug_print("left_side = ", query)
+            query_question.append(query)
+        question_options = param['query_options']
+
+        ret_val, rows, columns = self._ask_manual_question(response_filter, query_question, question_options,
+                                                           action_result)
+
+        if (not ret_val):
+            return action_result.get_status()
+
+        action_result.update_summary({TANIUM_JSON_ENTRIES_FOUND: len(rows)})
+
+        # Format the output
+        [action_result.add_data({'name': x[0], 'count': x[1]}) for x in rows]
+
+        return action_result.set_status(phantom.APP_SUCCESS)
 
     def _deploy_action(self, action_filters, package, name, comment, action_result, action_group):
 
@@ -528,7 +571,7 @@ class TaniumConnector(BaseConnector):
         if (not phantom.is_ip(ip_hostname)):
             endpoint_filter = MACHINE_NAME_ACTION_FILTER.format(ip_hostname=ip_hostname)
 
-        ret_val, rows, columns = self._ask_manual_question(['Running Processes'], [endpoint_filter], action_result)
+        ret_val, rows, columns = self._ask_manual_question(['Running Processes'], [endpoint_filter], ['or'], action_result)
 
         if (not ret_val):
             return action_result.get_status()
@@ -669,6 +712,8 @@ class TaniumConnector(BaseConnector):
             result = self._get_parsed_questions(param)
         elif (action == self.ACTION_ID_EXECUTE_ACTION):
             result = self._execute_action(param)
+        elif (action == self.ACTION_ID_MANUAL_QUERY):
+            result = self._manual_query(param)
         else:
             self.unknown_action()
 
