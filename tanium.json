@@ -793,16 +793,6 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.data.*.count",
-                    "data_type": "string",
-                    "example_values": [
-                        "10.17.1.56"
-                    ],
-                    "contains": [
-                        "ip"
-                    ]
-                },
-                {
                     "data_path": "action_result.data.*.name",
                     "data_type": "string",
                     "example_values": [
