@@ -744,7 +744,7 @@
         {
             "action": "manual query",
             "description": "Ask a Manual question no parsing",
-            "verbose": "<p>The <b>manual query</b>asks a human readable string to in turn ask Tanium a question. The question is broken into three different parameters Response - this is what you are request back from Tanium this is ingested as a string of options seperated by a ';' Ex. Computer Name; IP Address would return both Computer names and IP address Question filter - this is the filter to pass to Tanium to have mutiple filters use the simi colan to seperate mutiple filters Ex. Operating Systen, that contains:Windows; Operating System, that contains:Linux Options - This the option passed to Tanium examples of options <or/and> and more",
+            "verbose": "This action takes a human readable string to in turn ask Tanium a question. The question is broken into three different parameters:<ul><li><b>left_side</b>: This is what you are requesting back from Tanium. This is ingested as a string of options seperated by a semicolon (Ex: &quotComputer Name; IP Address&quot would return both Computer names and IP addresses)</li><li><b>right_side</b>: This is the filter to pass to Tanium. Different filters should be separated by a semicolon. (Ex: &quotOperating Systen, that contains:Windows; Operating System, that contains:Linux&quot)</li><li><b>query_options</b>: These are the options passed to Tanium. (Ex: &quotand&quot, &quot ) ;or&quot etc...)",
             "type": "investigate",
             "identifier": "manual_query",
             "read_only": true,
