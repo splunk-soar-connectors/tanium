@@ -11,7 +11,7 @@
     "product_vendor": "Tanium",
     "product_name": "Tanium",
     "product_version_regex": ".*",
-    "min_phantom_version": "3.0.190",
+    "min_phantom_version": "3.0.284",
     "logo": "logo_tanium.svg",
     "logo_dark": "logo_tanium_dark.svg",
     "license": "Copyright (c) Phantom Cyber Corporation, 2015-2018",
@@ -305,41 +305,7 @@
                     "data_type": "string"
                 },
                 {
-                    "data_path": "action_result.summary",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.message",
-                    "data_type": "string",
-                    "column_name": "Status",
-                    "column_order": 1,
-                    "example_values": [
-                        "failed: 0, finished: 1, running: 0, success: 1, unknown: 0, Done Key: success, Passed Count: 1\nCompleted\nwin7ult32.corp.contoso.com\n"
-                    ]
-                },
-                {
-                    "data_path": "summary.total_objects",
-                    "data_type": "numeric",
-                    "example_values": [
-                        1
-                    ]
-                },
-                {
-                    "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric",
-                    "example_values": [
-                        1
-                    ]
-                },
-                {
                     "data_path": "action_result.data.*.failed.total",
-                    "data_type": "numeric",
-                    "example_values": [
-                        0
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.running.total",
                     "data_type": "numeric",
                     "example_values": [
                         0
@@ -357,6 +323,13 @@
                     "data_type": "numeric",
                     "example_values": [
                         1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.running.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
                     ]
                 },
                 {
@@ -381,10 +354,37 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.summary.id",
                     "data_type": "string",
                     "example_values": [
                         "256"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "column_name": "Status",
+                    "column_order": 1,
+                    "example_values": [
+                        "failed: 0, finished: 1, running: 0, success: 1, unknown: 0, Done Key: success, Passed Count: 1\nCompleted\nwin7ult32.corp.contoso.com\n"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
                     ]
                 }
             ],
@@ -656,41 +656,7 @@
                     "data_type": "string"
                 },
                 {
-                    "data_path": "action_result.summary",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.message",
-                    "data_type": "string",
-                    "column_name": "Status",
-                    "column_order": 1,
-                    "example_values": [
-                        "failed: 0, finished: 1, running: 0, success: 1, unknown: 0, Done Key: success, Passed Count: 1\nCompleted\nwin7ult32.corp.contoso.com\n"
-                    ]
-                },
-                {
-                    "data_path": "summary.total_objects",
-                    "data_type": "numeric",
-                    "example_values": [
-                        1
-                    ]
-                },
-                {
-                    "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric",
-                    "example_values": [
-                        1
-                    ]
-                },
-                {
                     "data_path": "action_result.data.*.failed.total",
-                    "data_type": "numeric",
-                    "example_values": [
-                        0
-                    ]
-                },
-                {
-                    "data_path": "action_result.data.*.running.total",
                     "data_type": "numeric",
                     "example_values": [
                         0
@@ -708,6 +674,13 @@
                     "data_type": "numeric",
                     "example_values": [
                         1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.running.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
                     ]
                 },
                 {
@@ -732,10 +705,37 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.summary.id",
                     "data_type": "string",
                     "example_values": [
                         "257"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "column_name": "Status",
+                    "column_order": 1,
+                    "example_values": [
+                        "failed: 0, finished: 1, running: 0, success: 1, unknown: 0, Done Key: success, Passed Count: 1\nCompleted\nwin7ult32.corp.contoso.com\n"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
                     ]
                 }
             ],
@@ -793,31 +793,54 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.message",
-                    "data_type": "string",
-                    "example_values": [
-                        "Number of results found: 7\nQuery text: Get Computer Name and IP Address from all machines with ( Operating System containing \"Windows\" or Operating System containing \"Linux\" )"
-                    ]
-                },
-                {
                     "data_path": "action_result.parameter.left_side",
                     "data_type": "string",
+                    "contains": [
+                        "tanium response"
+                    ],
                     "example_values": [
                         "Computer Name;IP Address"
                     ]
                 },
                 {
+                    "data_path": "action_result.parameter.query_options",
+                    "data_type": "string",
+                    "contains": [
+                        "tanium options"
+                    ],
+                    "example_values": [
+                        "or"
+                    ]
+                },
+                {
                     "data_path": "action_result.parameter.right_side",
                     "data_type": "string",
+                    "contains": [
+                        "tanium filter"
+                    ],
                     "example_values": [
                         "Operating System, that contains:Windows; Operating System, that contains:Linux"
                     ]
                 },
                 {
-                    "data_path": "action_result.parameter.query_options",
+                    "data_path": "action_result.data.*.count",
                     "data_type": "string",
+                    "column_name": "",
+                    "column_order": 0,
+                    "example_values": []
+                },
+                {
+                    "data_path": "action_result.data.*.name",
+                    "data_type": "string",
+                    "column_name": "",
+                    "column_order": 1,
+                    "example_values": []
+                },
+                {
+                    "data_path": "action_result.summary.number_of_results_found",
+                    "data_type": "numeric",
                     "example_values": [
-                        "or"
+                        7
                     ]
                 },
                 {
@@ -828,25 +851,11 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.summary.number_of_results_found",
-                    "data_type": "numeric",
+                    "data_path": "action_result.message",
+                    "data_type": "string",
                     "example_values": [
-                        7
+                        "Number of results found: 7\nQuery text: Get Computer Name and IP Address from all machines with ( Operating System containing \"Windows\" or Operating System containing \"Linux\" )"
                     ]
-                },
-                {
-                  "data_path": "action_result.data.*.count",
-                  "data_type": "string",
-                  "column_name": "",
-                  "column_order": 0,
-                  "example_values": []
-                },
-                {
-                  "data_path": "action_result.data.*.name",
-                  "data_type": "string",
-                  "column_name": "",
-                  "column_order": 1,
-                  "example_values": []
                 },
                 {
                     "data_path": "summary.total_objects",
