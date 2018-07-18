@@ -14,7 +14,7 @@
     "min_phantom_version": "3.0.284",
     "logo": "logo_tanium.svg",
     "logo_dark": "logo_tanium_dark.svg",
-    "license": "Copyright (c) Phantom Cyber Corporation, 2015-2018",
+    "license": "Copyright (c) 2015-2018 Splunk Inc.",
     "configuration": {
         "device": {
             "data_type": "string",
@@ -170,6 +170,18 @@
                     "description": "Parsed question",
                     "required": false,
                     "data_type": "boolean"
+                },
+                "timeout_seconds": {
+                    "order": 2,
+                    "description": "If supplied and not 0, timeout in seconds instead of when object expires",
+                    "required": false,
+                    "data_type": "numeric"
+                },
+                "passed_count": {
+                    "order": 3,
+                    "description": "When this number of systems have answered, consider the question complete",
+                    "required": false,
+                    "data_type": "numeric"
                 }
             },
             "render": {
@@ -189,11 +201,25 @@
                     "data_type": "boolean"
                 },
                 {
+                    "data_path": "action_result.parameter.passed_count",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
                     "data_path": "action_result.parameter.query",
                     "data_type": "string",
                     "contains": [
                         "tanium question",
                         "tanium parsed question"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.timeout_seconds",
+                    "data_type": "numeric",
+                    "example_values": [
+                        300
                     ]
                 },
                 {
@@ -257,6 +283,18 @@
                     "description": "Action Group to execute on",
                     "required": false,
                     "primary": false
+                },
+                "timeout_seconds": {
+                    "order": 3,
+                    "description": "If supplied and not 0, timeout in seconds instead of when object expires",
+                    "required": false,
+                    "data_type": "numeric"
+                },
+                "passed_count": {
+                    "order": 4,
+                    "description": "Specify the number of systems that should run this action instead of asking a question",
+                    "required": false,
+                    "data_type": "numeric"
                 }
             },
             "render": {
@@ -298,6 +336,20 @@
                     "data_type": "string",
                     "example_values": [
                         "Registry - Delete Key{$1=32,$2=HKLM\\Software\\Phantom\\TestKey}"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.passed_count",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.timeout_seconds",
+                    "data_type": "numeric",
+                    "example_values": [
+                        300
                     ]
                 },
                 {
@@ -414,6 +466,18 @@
                     "description": "Action Group to execute on",
                     "required": false,
                     "primary": false
+                },
+                "timeout_seconds": {
+                    "order": 2,
+                    "description": "If supplied and not 0, timeout in seconds instead of when object expires",
+                    "required": false,
+                    "data_type": "numeric"
+                },
+                "passed_count": {
+                    "order": 3,
+                    "description": "Specify the number of systems that should run this action instead of asking a question",
+                    "required": false,
+                    "data_type": "numeric"
                 }
             },
             "render": {
@@ -440,6 +504,20 @@
                     ],
                     "column_name": "Name/IP Address",
                     "column_order": 0
+                },
+                {
+                    "data_path": "action_result.parameter.passed_count",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.timeout_seconds",
+                    "data_type": "numeric",
+                    "example_values": [
+                        300
+                    ]
                 },
                 {
                     "data_path": "action_result.data",
@@ -483,6 +561,18 @@
                     ],
                     "required": true,
                     "primary": true
+                },
+                "timeout_seconds": {
+                    "order": 3,
+                    "description": "If supplied and not 0, timeout in seconds instead of when object expires",
+                    "required": false,
+                    "data_type": "numeric"
+                },
+                "passed_count": {
+                    "order": 4,
+                    "description": "When this number of systems have answered, consider the question complete",
+                    "required": false,
+                    "data_type": "numeric"
                 }
             },
             "render": {
@@ -508,6 +598,20 @@
                     ],
                     "example_values": [
                         "win7ult32.corp.contoso.com"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.passed_count",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.timeout_seconds",
+                    "data_type": "numeric",
+                    "example_values": [
+                        300
                     ]
                 },
                 {
@@ -604,6 +708,18 @@
                     "description": "Action Group to execute on",
                     "required": false,
                     "primary": false
+                },
+                "timeout_seconds": {
+                    "order": 3,
+                    "description": "If supplied and not 0, timeout in seconds instead of when object expires (10 min)",
+                    "required": false,
+                    "data_type": "numeric"
+                },
+                "passed_count": {
+                    "order": 4,
+                    "description": "Specify the number of systems that should run this action instead of asking a question",
+                    "required": false,
+                    "data_type": "numeric"
                 }
             },
             "render": {
@@ -649,6 +765,20 @@
                     ],
                     "example_values": [
                         "notepad.exe"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.passed_count",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.timeout_seconds",
+                    "data_type": "numeric",
+                    "example_values": [
+                        300
                     ]
                 },
                 {
@@ -782,6 +912,18 @@
                         "and",
                         "or"
                     ]
+                },
+                "timeout_seconds": {
+                    "order": 3,
+                    "description": "If supplied and not 0, timeout in seconds instead of when object expires",
+                    "required": false,
+                    "data_type": "numeric"
+                },
+                "passed_count": {
+                    "order": 4,
+                    "description": "When this number of systems have answered, consider the question complete",
+                    "required": false,
+                    "data_type": "numeric"
                 }
             },
             "output": [
@@ -803,6 +945,13 @@
                     ]
                 },
                 {
+                    "data_path": "action_result.parameter.passed_count",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
                     "data_path": "action_result.parameter.query_options",
                     "data_type": "string",
                     "contains": [
@@ -820,6 +969,13 @@
                     ],
                     "example_values": [
                         "Operating System, that contains:Windows; Operating System, that contains:Linux"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.timeout_seconds",
+                    "data_type": "numeric",
+                    "example_values": [
+                        300
                     ]
                 },
                 {
