@@ -1,5 +1,8 @@
+docker-compose.yml
 tanium/__init__.py
-tanium/tanium_connector.py
 tanium/tanium_consts.py
+Makefile
+tanium/tanium_connector.py
 tanium/tanium_view.py 
 .git*
+.gitlab-ci.yml
