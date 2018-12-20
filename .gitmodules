@@ -1,4 +1,4 @@
 [submodule "pytanlib"]
 	path = pytanlib
-	url = ssh://bitbucket.phantom.us:7999/per/pytan-2.2.2.git
+	url = git@cd.splunkdev.com:phantom-external/pytan-2.2.2.git
 	ignore = dirty
