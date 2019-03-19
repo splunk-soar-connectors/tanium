@@ -1,5 +1,5 @@
 # File: tanium_connector.py
-# Copyright (c) 2015-2018 Splunk Inc.
+# Copyright (c) 2016-2019 Splunk Inc.
 #
 # SPLUNK CONFIDENTIAL - Use or disclosure of this material in whole or in part
 # without a valid written license from Splunk Inc. is PROHIBITED.
@@ -157,6 +157,7 @@ class TaniumConnector(BaseConnector):
         return ['' if x is None else x for x in input_list]
 
     def _ask_saved_question(self, param):
+        timeout_secs = param.get('timeout_seconds', 60)
         if (param.get(TANIUM_JSON_PARSED_FLAG, TANIUM_PARSED_FLAG_DEF_VALUE)):
             self._ask_parsed_question(param)
         else:
@@ -169,20 +170,24 @@ class TaniumConnector(BaseConnector):
 
             # setup the arguments for the handler() class
             ques_name = param[TANIUM_JSON_QUESTION]
+            ip_hostname = param.get('ip_hostname')
+
+            endpoint_filter = IP_ACTION_FILTER.format(ip_hostname=ip_hostname)
+            if (not phantom.is_ip(ip_hostname)):
+                endpoint_filter = MACHINE_NAME_ACTION_FILTER.format(ip_hostname=ip_hostname)
 
             kwargs = {}
             kwargs["refresh_data"] = True
             kwargs["qtype"] = u'saved'
+            kwargs["question_filters"] = [endpoint_filter]
             kwargs["name"] = ques_name
             kwargs["callback"] = {'ProgressChanged': self._question_progress}
 
-            if param.get('timeout_seconds'):
+            if str(timeout_secs).isdigit() and timeout_secs > 0:
                 # If supplied and not 0, timeout in seconds instead of when object expires (after 10 min)
-                kwargs['override_timeout_secs'] = param['timeout_seconds']
-
-            if param.get('passed_count'):
-                # When this number of systems have passed the right hand side of the question, consider the question complete
-                kwargs['force_passed_done_count'] = param['passed_count']
+                kwargs['override_timeout_secs'] = timeout_secs
+            else:
+                return action_result.set_status(phantom.APP_ERROR, "Please provide non-zero positive integer in timeout seconds")
 
             self.save_progress("Querying Tanium")
 
@@ -307,18 +312,10 @@ class TaniumConnector(BaseConnector):
         if (progress_str):
             status_msg.append(progress_str)
 
-        total, message = self._parse_status_response(action_result_map, "failed")
-        if (total):
-            status = phantom.APP_ERROR
-        if (message):
-            if (message not in status_msg):
-                status_msg.append(message)
-
         total, message = self._parse_status_response(action_result_map, "finished")
         if (total):
             status = phantom.APP_SUCCESS
         if (message):
-            if (message not in status_msg):
                 status_msg.append(message)
 
         total, message = self._parse_status_response(action_result_map, "running")
@@ -335,13 +332,20 @@ class TaniumConnector(BaseConnector):
             if (message not in status_msg):
                 status_msg.append(message)
 
+        total, message = self._parse_status_response(action_result_map, "failed")
+        if (total):
+            status = phantom.APP_ERROR
+        if (message):
+            if (message not in status_msg):
+                status_msg.append(message)
+
         action_result.set_status(status, '\n'.join(status_msg))
         action_result.add_data(action_result_map)
         action_result.set_summary({'id': str(action_id)})
 
         return phantom.APP_SUCCESS
 
-    def _ask_manual_question(self, sensors, question_filters, question_options, action_result, timeout_seconds=None, passed_count=None):
+    def _ask_manual_question(self, sensors, question_filters, question_options, action_result, timeout_seconds=None):
 
         rows = []
         columns = []
@@ -357,14 +361,7 @@ class TaniumConnector(BaseConnector):
         kwargs["question_filters"] = question_filters
         kwargs["sensors"] = sensors
         kwargs["question_options"] = question_options
-
-        if timeout_seconds:
-            # If supplied and not 0, timeout in seconds instead of when object expires (after 10 min)
-            kwargs['override_timeout_secs'] = timeout_seconds
-
-        if passed_count:
-            # When this number of systems have passed the right hand side of the question, consider the question complete
-            kwargs['force_passed_done_count'] = passed_count
+        kwargs['override_timeout_secs'] = timeout_seconds
 
         # kwargs["callback"] = {'ProgressChanged': self._question_progress}
 
@@ -426,7 +423,7 @@ class TaniumConnector(BaseConnector):
         return (phantom.APP_SUCCESS, rows, columns)
 
     def _execute_action(self, param):
-
+        timeout_secs = param.get('timeout_seconds', 60)
         action_result = self.add_action_result(ActionResult(dict(param)))
         container_id = self.get_container_id()
         ip_hostname = param[phantom.APP_JSON_IP_HOSTNAME]
@@ -434,17 +431,8 @@ class TaniumConnector(BaseConnector):
         action_name = "Phantom Execution - %s " % (package_name.split('{')[0].strip())
         endpoint_filter = IP_ACTION_FILTER.format(ip_hostname=ip_hostname)
 
-        if param.get('timeout_seconds'):
-            # If supplied and not 0, timeout in seconds instead of when object expires (after 10 min)
-            timeout_seconds = param['timeout_seconds']
-        else:
-            timeout_seconds = None
-
-        if param.get('passed_count'):
-            # instead of getting number of systems that should run this action by asking a question, use this number
-            passed_count = param['passed_count']
-        else:
-            passed_count = None
+        if not str(timeout_secs).isdigit() or timeout_secs <= 0:
+            return action_result.set_status(phantom.APP_ERROR, "Please provide non-zero positive integer in timeout seconds")
 
         if (not phantom.is_ip(ip_hostname)):
             endpoint_filter = MACHINE_NAME_ACTION_FILTER.format(ip_hostname=ip_hostname)
@@ -452,13 +440,13 @@ class TaniumConnector(BaseConnector):
         action_result.set_status(phantom.APP_SUCCESS, "Endpoint Filter: " + str(endpoint_filter))
 
         self._deploy_action(endpoint_filter, package_name, action_name, ACTION_COMMENT.format(container_id=container_id),
-                            action_result, action_group=param.get('action_group'), timeout_seconds=timeout_seconds,
-                            passed_count=passed_count)
+                            action_result, action_group=param.get('action_group'), timeout_seconds=timeout_secs)
 
         return action_result.get_status()
 
     def _manual_query(self, param):
 
+        timeout_secs = param.get('timeout_seconds', 60)
         action_result = self.add_action_result(ActionResult(param))
 
         ret_val, handler = self._create_handler(action_result)
@@ -472,28 +460,21 @@ class TaniumConnector(BaseConnector):
         for response in response_list:
             self.debug_print("left_side= ", response)
 
-        query_question = param.get('right_side')
-        question_list = query_question.split(";")
-        for query in question_list:
-            self.debug_print("right_side = ", query)
+        if param.get('right_side'):
+            query_question = param.get('right_side')
+            question_list = query_question.split(";")
+            for query in question_list:
+                self.debug_print("right_side = ", query)
+        else:
+            question_list = []
 
         question_options = param.get('query_options')
 
-        if param.get('timeout_seconds'):
-            # If supplied and not 0, timeout in seconds instead of when object expires (after 10 min)
-            timeout_seconds = param['timeout_seconds']
-        else:
-            timeout_seconds = None
-
-        if param.get('passed_count'):
-            # When this number of systems have passed the right hand side of the question, consider the question complete
-            passed_count = param['passed_count']
-        else:
-            passed_count = None
+        if not str(timeout_secs).isdigit() or timeout_secs <= 0:
+            return action_result.set_status(phantom.APP_ERROR, "Please provide non-zero positive integer in timeout seconds")
 
         ret_val, rows, columns = self._ask_manual_question(response_list, question_list, question_options,
-                                                           action_result, timeout_seconds=timeout_seconds,
-                                                           passed_count=passed_count)
+                                                           action_result, timeout_seconds=timeout_secs)
 
         if (not ret_val):
             return action_result.get_status()
@@ -505,7 +486,7 @@ class TaniumConnector(BaseConnector):
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
-    def _deploy_action(self, action_filters, package, name, comment, action_result, action_group, timeout_seconds=None, passed_count=None):
+    def _deploy_action(self, action_filters, package, name, comment, action_result, action_group, timeout_seconds=None):
 
         ret_val, handler = self._create_handler(action_result)
 
@@ -519,17 +500,10 @@ class TaniumConnector(BaseConnector):
         kwargs["package"] = package
         kwargs["action_name"] = name
         kwargs["action_comment"] = comment
+        kwargs['override_timeout_secs'] = timeout_seconds
 
         if (action_group):
             kwargs['action_group'] = action_group
-
-        if timeout_seconds:
-            # If supplied and not 0, timeout in seconds instead of when object expires (after 10 min)
-            kwargs['override_timeout_secs'] = timeout_seconds
-
-        if passed_count:
-            # instead of getting number of systems that should run this action by asking a question, use this number
-            kwargs['override_passed_count'] = passed_count
 
         self.save_progress("Deploying Action on Tanium")
 
@@ -540,10 +514,11 @@ class TaniumConnector(BaseConnector):
 
         self._parse_deploy_action_response(response, action_result)
 
-        return phantom.APP_SUCCESS
+        return action_result.get_status()
 
     def _test_connectivity(self, param):
 
+        action_result = self.add_action_result(ActionResult(dict(param)))
         # Progress
         self.save_progress(TANIUM_USING_BASE_URL, base_url=self._base_url)
 
@@ -552,74 +527,62 @@ class TaniumConnector(BaseConnector):
         # Connectivity
         self.save_progress(phantom.APP_PROG_CONNECTING_TO_ELLIPSES, config[phantom.APP_JSON_DEVICE])
 
-        ret_val, handler = self._create_handler(result_obj=self)
+        ret_val, handler = self._create_handler(action_result)
 
         if (phantom.is_fail(ret_val)):
-            self.append_to_message(TANIUM_ERR_CONNECTIVITY_TEST)
-            return self.get_status()
+            self.save_progress(TANIUM_ERR_CONNECTIVITY_TEST)
+            return action_result.get_status()
 
         return self.set_status_save_progress(phantom.APP_SUCCESS, TANIUM_SUCC_CONNECTIVITY_TEST)
 
     def _terminate_process(self, param):
-
+        timeout_secs = param.get('timeout_seconds', 60)
         action_result = self.add_action_result(ActionResult(dict(param)))
         container_id = self.get_container_id()
         proc_name = param[phantom.APP_JSON_NAME]
         ip_hostname = param[phantom.APP_JSON_IP_HOSTNAME]
+        sensor = param['sensor']
+        package_name = param['package_name']
         endpoint_filter = IP_ACTION_FILTER.format(ip_hostname=ip_hostname)
 
-        if param.get('timeout_seconds'):
-            # If supplied and not 0, timeout in seconds instead of when object expires (after 10 min)
-            timeout_seconds = param['timeout_seconds']
-        else:
-            timeout_seconds = None
-
-        if param.get('passed_count'):
-            # instead of getting number of systems that should run this action by asking a question, use this number
-            passed_count = param['passed_count']
-        else:
-            passed_count = None
+        if not str(timeout_secs).isdigit() or timeout_secs <= 0:
+            return action_result.set_status(phantom.APP_ERROR, "Please provide non-zero positive integer in timeout seconds")
 
         if (not phantom.is_ip(ip_hostname)):
             endpoint_filter = MACHINE_NAME_ACTION_FILTER.format(ip_hostname=ip_hostname)
 
-        self._deploy_action(endpoint_filter, KILL_PROC_PACKAGE.format(proc_name=proc_name), ACTION_NAME_TERM_PROC, ACTION_COMMENT.format(container_id=container_id),
-                            action_result, action_group=param.get('action_group'), timeout_seconds=timeout_seconds, passed_count=passed_count)
+        self._deploy_action(endpoint_filter, KILL_PROC_PACKAGE.format(proc_name=proc_name, sensor=sensor, package_name=package_name), ACTION_NAME_TERM_PROC,
+                            ACTION_COMMENT.format(container_id=container_id), action_result,
+                            action_group=param.get('action_group'), timeout_seconds=timeout_secs)
 
         return action_result.get_status()
 
     def _reboot_system(self, param):
-
+        timeout_secs = param.get('timeout_seconds', 60)
         action_result = self.add_action_result(ActionResult(dict(param)))
         container_id = self.get_container_id()
         ip_hostname = param[phantom.APP_JSON_IP_HOSTNAME]
+        package_name = param['package_name']
         endpoint_filter = IP_ACTION_FILTER.format(ip_hostname=ip_hostname)
 
-        if param.get('timeout_seconds'):
-            # If supplied and not 0, timeout in seconds instead of when object expires (after 10 min)
-            timeout_seconds = param['timeout_seconds']
-        else:
-            timeout_seconds = None
-
-        if param.get('passed_count'):
-            # instead of getting number of systems that should run this action by asking a question, use this number
-            passed_count = param['passed_count']
-        else:
-            passed_count = None
+        if not str(timeout_secs).isdigit() or timeout_secs <= 0:
+            return action_result.set_status(phantom.APP_ERROR, "Please provide non-zero positive integer in timeout seconds")
 
         if (not phantom.is_ip(ip_hostname)):
             endpoint_filter = MACHINE_NAME_ACTION_FILTER.format(ip_hostname=ip_hostname)
 
-        self._deploy_action(endpoint_filter, REBOOT_SYS_PACKAGE, ACTION_NAME_REBOOT_SYS, ACTION_COMMENT.format(container_id=container_id),
-                            action_result, action_group=param.get('action_group'), timeout_seconds=timeout_seconds, passed_count=passed_count)
+        self._deploy_action(endpoint_filter, package_name, ACTION_NAME_REBOOT_SYS, ACTION_COMMENT.format(container_id=container_id),
+                            action_result, action_group=param.get('action_group'), timeout_seconds=timeout_secs)
 
         return action_result.get_status()
 
     def _list_processes(self, param):
-
+        timeout_secs = param.get('timeout_seconds', 60)
         action_result = self.add_action_result(ActionResult(param))
 
         ret_val, handler = self._create_handler(action_result)
+
+        sensor = param.get('sensor')
 
         if (phantom.is_fail(ret_val)):
             return action_result.get_status()
@@ -628,23 +591,14 @@ class TaniumConnector(BaseConnector):
         ip_hostname = param[phantom.APP_JSON_IP_HOSTNAME]
         endpoint_filter = IP_ACTION_FILTER.format(ip_hostname=ip_hostname)
 
-        if param.get('timeout_seconds'):
-            # If supplied and not 0, timeout in seconds instead of when object expires (after 10 min)
-            timeout_seconds = param['timeout_seconds']
-        else:
-            timeout_seconds = None
-
-        if param.get('passed_count'):
-            # instead of getting number of systems that should run this action by asking a question, use this number
-            passed_count = param['passed_count']
-        else:
-            passed_count = None
+        if not str(timeout_secs).isdigit() or timeout_secs <= 0:
+            return action_result.set_status(phantom.APP_ERROR, "Please provide non-zero positive integer in timeout seconds")
 
         if (not phantom.is_ip(ip_hostname)):
             endpoint_filter = MACHINE_NAME_ACTION_FILTER.format(ip_hostname=ip_hostname)
 
-        ret_val, rows, columns = self._ask_manual_question(['Running Processes'], [endpoint_filter], ['or'], action_result,
-                                                           timeout_seconds=timeout_seconds, passed_count=passed_count)
+        ret_val, rows, columns = self._ask_manual_question([sensor], [endpoint_filter], ['or'], action_result,
+                                                           timeout_seconds=timeout_secs)
 
         if (not ret_val):
             return action_result.get_status()
@@ -682,6 +636,8 @@ class TaniumConnector(BaseConnector):
             return action_result.set_status(phantom.APP_ERROR, "Error while getting questions", e)
 
         try:
+            if(len(response) == 0):
+                return action_result.set_status(phantom.APP_ERROR, "No results found for the requested query")
             for index, resp in enumerate(response):
                 action_result.add_data({"question": {"question_text": resp.question_text, "score": resp.score, "index": index}})
                 action_result.set_summary({"total_objects": len(response)})
@@ -692,6 +648,7 @@ class TaniumConnector(BaseConnector):
 
     def _ask_parsed_question(self, param):
 
+        timeout_secs = param.get('timeout_seconds')
         action_result = self.add_action_result(ActionResult(param))
 
         ret_val, handler = self._create_handler(action_result)
@@ -701,21 +658,26 @@ class TaniumConnector(BaseConnector):
 
         # setup the arguments for the handler() class
         ques_name = param[TANIUM_JSON_QUESTION]
+        ip_hostname = param.get('ip_hostname')
+        endpoint_filter = IP_ACTION_FILTER.format(ip_hostname=ip_hostname)
+        if (not phantom.is_ip(ip_hostname)):
+            endpoint_filter = MACHINE_NAME_ACTION_FILTER.format(ip_hostname=ip_hostname)
+        ques_filter = [endpoint_filter]
 
         kwargs = {}
         kwargs["refresh_data"] = True
         kwargs["qtype"] = u'parsed'
         kwargs["question_text"] = ques_name
+        kwargs["question_filters"] = ques_filter
+        kwargs["question_options"] = ['or']
         kwargs["callback"] = {'ProgressChanged': self._question_progress}
         kwargs["picker"] = 1
 
-        if param.get('timeout_seconds'):
+        if str(timeout_secs).isdigit() and timeout_secs > 0:
             # If supplied and not 0, timeout in seconds instead of when object expires (after 10 min)
-            kwargs['override_timeout_secs'] = param['timeout_seconds']
-
-        if param.get('passed_count'):
-            # When this number of systems have passed the right hand side of the question, consider the question complete
-            kwargs['force_passed_done_count'] = param['passed_count']
+            kwargs['override_timeout_secs'] = timeout_secs
+        else:
+            return action_result.set_status(phantom.APP_ERROR, "Please provide non-zero positive integer in timeout seconds")
 
         self.save_progress("Querying Tanium")
 
