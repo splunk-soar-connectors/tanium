@@ -169,7 +169,7 @@
                 "timeout_seconds": {
                     "order": 2,
                     "description": "If supplied and not 0, timeout in seconds instead of when object expires",
-                    "required": false,
+                    "required": true,
                     "data_type": "numeric",
                     "default": 60
                 },
@@ -331,7 +331,7 @@
                 "timeout_seconds": {
                     "order": 3,
                     "description": "If supplied and not 0, timeout in seconds instead of when object expires",
-                    "required": false,
+                    "required": true,
                     "data_type": "numeric",
                     "default": 60
                 }
@@ -511,7 +511,7 @@
                 "timeout_seconds": {
                     "order": 2,
                     "description": "If supplied and not 0, timeout in seconds instead of when object expires",
-                    "required": false,
+                    "required": true,
                     "data_type": "numeric",
                     "default": 60
                 },
@@ -702,7 +702,7 @@
                 "timeout_seconds": {
                     "order": 2,
                     "description": "If supplied and not 0, timeout in seconds instead of when object expires",
-                    "required": false,
+                    "required": true,
                     "data_type": "numeric",
                     "default": 60
                 }
@@ -851,7 +851,7 @@
                 "timeout_seconds": {
                     "order": 3,
                     "description": "If supplied and not 0, timeout in seconds instead of when object expires (10 min)",
-                    "required": false,
+                    "required": true,
                     "data_type": "numeric",
                     "default": 60
                 },
@@ -1086,7 +1086,7 @@
                 "timeout_seconds": {
                     "order": 3,
                     "description": "If supplied and not 0, timeout in seconds instead of when object expires",
-                    "required": false,
+                    "required": true,
                     "data_type": "numeric",
                     "default": 60
                 }

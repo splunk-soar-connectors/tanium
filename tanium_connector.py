@@ -157,7 +157,7 @@ class TaniumConnector(BaseConnector):
         return ['' if x is None else x for x in input_list]
 
     def _ask_saved_question(self, param):
-        timeout_secs = param.get('timeout_seconds', 60)
+        timeout_secs = param.get('timeout_seconds')
         if (param.get(TANIUM_JSON_PARSED_FLAG, TANIUM_PARSED_FLAG_DEF_VALUE)):
             self._ask_parsed_question(param)
         else:
@@ -423,7 +423,7 @@ class TaniumConnector(BaseConnector):
         return (phantom.APP_SUCCESS, rows, columns)
 
     def _execute_action(self, param):
-        timeout_secs = param.get('timeout_seconds', 60)
+        timeout_secs = param.get('timeout_seconds')
         action_result = self.add_action_result(ActionResult(dict(param)))
         container_id = self.get_container_id()
         ip_hostname = param[phantom.APP_JSON_IP_HOSTNAME]
@@ -446,7 +446,7 @@ class TaniumConnector(BaseConnector):
 
     def _manual_query(self, param):
 
-        timeout_secs = param.get('timeout_seconds', 60)
+        timeout_secs = param.get('timeout_seconds')
         action_result = self.add_action_result(ActionResult(param))
 
         ret_val, handler = self._create_handler(action_result)
@@ -536,7 +536,7 @@ class TaniumConnector(BaseConnector):
         return self.set_status_save_progress(phantom.APP_SUCCESS, TANIUM_SUCC_CONNECTIVITY_TEST)
 
     def _terminate_process(self, param):
-        timeout_secs = param.get('timeout_seconds', 60)
+        timeout_secs = param.get('timeout_seconds')
         action_result = self.add_action_result(ActionResult(dict(param)))
         container_id = self.get_container_id()
         proc_name = param[phantom.APP_JSON_NAME]
@@ -558,7 +558,7 @@ class TaniumConnector(BaseConnector):
         return action_result.get_status()
 
     def _reboot_system(self, param):
-        timeout_secs = param.get('timeout_seconds', 60)
+        timeout_secs = param.get('timeout_seconds')
         action_result = self.add_action_result(ActionResult(dict(param)))
         container_id = self.get_container_id()
         ip_hostname = param[phantom.APP_JSON_IP_HOSTNAME]
@@ -577,7 +577,7 @@ class TaniumConnector(BaseConnector):
         return action_result.get_status()
 
     def _list_processes(self, param):
-        timeout_secs = param.get('timeout_seconds', 60)
+        timeout_secs = param.get('timeout_seconds')
         action_result = self.add_action_result(ActionResult(param))
 
         ret_val, handler = self._create_handler(action_result)

@@ -4,4 +4,46 @@
   SPLUNK CONFIDENTIAL - Use or disclosure of this material in whole or in part
   without a valid written license from Splunk Inc. is PROHIBITED.
 -->
-<p>Some things to note:<ul><li>The asset configuration parameter <b>port</b> is optional, if not specified the app will use 443. Depending on the Tanium server version, other valid values can be 8443 or 444.</li><li>Actions like <b>terminate process</b> and <b>reboot system</b> work on either an ip address or a host name.</li><li>It has been noticed that Tanium requires the host name to be an FQDN like win7ult32.corp.contoso.com instead of just win7ult32.</li><li>The action parameter timeout_seconds is optional, if not specified the app will use 60 seconds as default value. As intermittently, for some action input parameters, the actions (terminate_process, reboot_system) won't terminate on its own due to the issue in the SDK, it is recommended to provide the <b>timeout_seconds</b> parameter or else the action will be auto-terminated by a default timeout of 60 seconds.</li><li>The below actions when executed, launches an action in the TANIUM server which in turn will execute the command mentioned in the package linked with the action launched on TANIUM.<ul><li>execute action</li><li>reboot system</li><li>terminate process</li></ul></li><li>In action <b>run query</b> the parameter <b>is_parsed</b> must be kept as true if the provided value in the query parameter is a plain manual question being asked to TANIUM and not a saved question. It should be kept as false if the value provided in the query parameter is the display name of already saved question in the TANIUM server</li></ul></p>
+<p><b>Notes</b>
+  <ul>
+    <li>The asset configuration parameter <b>port</b> is optional, if not specified the app will use 443. Depending on the Tanium server version, other valid values can be 8443 or 444.</li>
+    <li>Actions like <b>terminate process</b> and <b>reboot system</b> work on either an ip address or a host name.</li>
+    <li>It has been noticed that Tanium requires the host name to be an FQDN like win7ult32.corp.contoso.com instead of just win7ult32.</li>
+  </ul>
+</p>
+<p><b>Timeout Parameter Guidelines</b>
+  <ul>
+    <li>Default expiry of any question asked on the Tanium server is 10 minutes. If the action is run with invalid parameters and timeout parameter is not specified, the action won't terminate immediately and will take 10 minutes for getting completed. Hence, timeout parameter has been made mandatory in all actions to avoid such a situation.</li>
+    <li>Default timeout of any action supporting it on the Tanium app is 60 seconds. This timeout has been decided after considering the worst case requiring to load a huge output data response. User needs to provide a timeout based on their requirements for the action execution.</li>
+    <li>Default timeout of any action supporting it on the Tanium app is 60 seconds</li>
+  </ul>
+</p>
+<p><b>Run Query Guidelines</b>
+  <ul>
+    <li>Two modes of operation are supported for run query action</li>
+    <ol>
+      <li>Saved Questions - User can save a manually created question on the Tanium server and then, provide the name of that saved question in the query parameter to fetch appropriate results. <b>is_parsed</b> parameter has to be set to False for this to work correctly.</li>
+      <li>Manual Questions - User can directly provide the question to be asked to the Tanium server in the query parameter to fetch appropriate results. <b>is_parsed</b> parameter has to be set to True for this to work correctly.</li>
+    </ol>
+  </ul>
+ </p>
+<p><b>Terminate Process Guidelines</b>
+  <ul>
+    <li>Please follow the below steps to execute this action successfully</li>
+    <ol>
+      <li>Create and save a package on the Tanium server with a meaningful package name and add a command to terminate the required process in the package's command section</li>
+      <li>Create and save a sensor on the Tanium server with a meaningful name and add a valid script code for fetching all the running processes for the authenticated user</li>
+      <li>Run the action <b>Terminate Process</b> with valid parameters and using the package and sensor name created in the above steps.</li>
+    </ol>
+  </ul>
+</p>
+<p><b>Reboot System and Execute Action Guidelines</b>
+  <ul>
+    <li>Please follow the below steps to execute this action successfully</li>
+    <ol>
+      <li>Create and save a package on the Tanium server with a meaningful package name and add a command to reboot the system in the package's command section</li>
+      <li>Run the action <b>Reboot System or Execute Action</b> with valid parameters and using the package name created in the above step.</li>
+    </ol>
+    <li>On a successful action run on Phantom, this will launch an action on the Tanium server and will execute the command mentioned in the package linked with the launched action</li>
+  </ul>
+</p>
