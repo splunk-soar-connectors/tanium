@@ -1,20 +1,20 @@
 {
     "appid": "f09b65f2-3ce5-4b57-8cb3-e269e11d20f7",
     "name": "Tanium",
-    "description": "This app supports <b>investigative</b> and <b>containment</b> actions on Tanium.",
-    "publisher": "Phantom",
+    "description": "This app supports investigative and containment actions on Tanium",
+    "publisher": "Splunk",
     "type": "endpoint",
     "main_module": "tanium_connector.pyc",
-    "app_version": "1.2.32",
-    "utctime_updated": "2018-01-26T00:50:48.000000Z",
+    "app_version": "1.2.40",
+    "utctime_updated": "2019-03-21T20:41:34.000000Z",
     "package_name": "phantom_tanium",
     "product_vendor": "Tanium",
     "product_name": "Tanium",
     "product_version_regex": ".*",
-    "min_phantom_version": "3.0.190",
+    "min_phantom_version": "4.0.1068",
     "logo": "logo_tanium.svg",
     "logo_dark": "logo_tanium_dark.svg",
-    "license": "Copyright (c) Phantom Cyber Corporation, 2015-2018",
+    "license": "Copyright (c) 2016-2019 Splunk Inc.",
     "configuration": {
         "device": {
             "data_type": "string",
@@ -29,34 +29,29 @@
             "order": 1,
             "default": "443"
         },
-        "verify_server_cert": {
-            "data_type": "boolean",
-            "description": "Verify server certificate",
-            "required": true,
-            "order": 2,
-            "default": false
-        },
-        "ph": {
-            "data_type": "ph",
-            "order": 3
-        },
         "username": {
             "data_type": "string",
-            "order": 4,
+            "order": 2,
             "description": "Username",
-            "optional": true
+            "required": true
         },
         "password": {
             "data_type": "password",
-            "order": 5,
+            "order": 3,
             "description": "Password",
-            "optional": true
+            "required": true
+        },
+        "verify_server_cert": {
+            "data_type": "boolean",
+            "description": "Verify server certificate",
+            "order": 4,
+            "default": false
         }
     },
     "actions": [
         {
             "action": "test connectivity",
-            "description": "Validate the asset configuration for connectivity. This action runs a quick query on the device to check the connection and credentials.",
+            "description": "Validate the asset configuration for connectivity using supplied configuration",
             "type": "test",
             "identifier": "test_asset_connectivity",
             "read_only": true,
@@ -80,7 +75,19 @@
             "output": [
                 {
                     "data_path": "action_result.status",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.id",
+                    "data_type": "string",
+                    "column_name": "Id",
+                    "column_order": 2,
+                    "example_values": [
+                        1
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.name",
@@ -89,31 +96,47 @@
                     "contains": [
                         "tanium question"
                     ],
-                    "column_order": 0
+                    "column_order": 0,
+                    "example_values": [
+                        "Has Tanium Standard Utilities"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.query_text",
                     "data_type": "string",
                     "column_name": "Question Text",
-                    "column_order": 1
-                },
-                {
-                    "data_path": "action_result.data.*.id",
-                    "data_type": "string",
-                    "column_name": "Id",
-                    "column_order": 2
+                    "column_order": 1,
+                    "example_values": [
+                        "Get Has Tanium Standard Utilities from all machines"
+                    ]
                 },
                 {
                     "data_path": "action_result.summary.total_saved_questions",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        97
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Total saved questions: 97"
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 }
             ],
             "versions": "EQ(*)"
@@ -121,7 +144,7 @@
         {
             "action": "run query",
             "description": "Run a saved or parsed question",
-            "verbose": "<p>The <b>run query</b> action can be used to run either a saved question or a parsed question.</p><p>A saved question is a commonly asked question that had been saved by any of the operators on the Tanium platform.  Saved questions can be ones that Tanium added by default, or custom questions that operators on the Tanium platform regularly use.</p><p>A parsed question is a little more complex.  The Tanium platform will not process questions unless they are saved by an operator on the platform, or is one of the default Tanium questions.  But thankfully, Tanium, when asked a non-saved question, will parse the question it is given, and give a list of suggestions that are related to the question it's given.</p><p>For example, on the Tanium platform, if one were to just ask the question, 'all IP addresses,' Tanium will give the suggestions:<br><ul><li>Get Static IP Addresses from all machines</li><li>Get IP Routes from all machines</li><li>Get IP Address from all machines</li><li>Get IP Connections from all machines</li><li>Get IP Route Details from all machines</li><li>Get Network IP Gateway from all machines</li></ul><br>Tanium sorts this list, from most-related to least-related.  That is, the option at the top of the list, which in this case is 'Get Static IP Addresses from all machines', is considered most-related to the given question 'all ip addresses.'<br>This functionality is reflected within the action <b>parse question</b>.</p><p>When the <b>is_parsed</b> box is checked (by default, it is not), the '<b>run query</b>' action behaves differently.  Instead of considering the question as a 'saved question', it will first ask the Tanium platform to return a list of the questions related to the one it is given.  It will then choose the most-related question from the list (the one at the top), and run that question.</p><p>Chaining results from the <b>parse question</b> action is highly recommended.  Questions in the action result of <b>parse question</b> are, not surprisingly, already parsed. As a result, using <b>run query</b> on a parsed question will ensure that the top result in the list is the question that is given.</p><p>For example, giving the <b>query</b> 'all IP addresses' to the <b>parse question</b> will return the same list as above in an action result.  Similarly, giving the parsed query 'Get Static IP Addresses from all machines' to <b>parse question</b> will have 'Get Static IP Addresses from all machines' at the top as well.</p><p>By parsing the question Tanium is given, Tanium gives back questions that it knows it will understand.  And by giving Tanium a question that it knows it will understand (by using <b>parse question</b>), using the <b>run query</b> action with the <b>is_parsed</b> option checked/True, Tanium will be guaranteed to run the question, without having to save it.</p>",
+            "verbose": "<p>The <b>run query</b> action can be used to run either a saved question or a parsed question.</p><p>A saved question is a commonly asked question that had been saved by any of the operators on the Tanium platform.  Saved questions can be ones that Tanium added by default or custom questions that operators on the Tanium platform regularly use.</p><p>A parsed question is a little more complex.  The Tanium platform will not process questions unless they are saved by an operator on the platform, or is one of the default Tanium questions.  But thankfully, Tanium, when asked a non-saved question, will parse the question it is given, and give a list of suggestions that are related to the question it's given.</p><p>For example, on the Tanium platform, if one were to just ask the question, 'all IP addresses,' Tanium will give the suggestions:<br><ul><li>Get Static IP Addresses from all machines</li><li>Get IP Routes from all machines</li><li>Get IP Address from all machines</li><li>Get IP Connections from all machines</li><li>Get IP Route Details from all machines</li><li>Get Network IP Gateway from all machines</li></ul><br>Tanium sorts this list, from most-related to least-related.  That is, the option at the top of the list, which in this case is 'Get Static IP Addresses from all machines', is considered most-related to the given question 'all ip addresses.'<br>This functionality is reflected in the action <b>parse question</b>.</p><p>When the <b>is_parsed</b> box is checked (by default, it is not), the '<b>run query</b>' action behaves differently.  Instead of considering the question as a 'saved question', it will first ask the Tanium platform to return a list of the questions related to the one it is given.  It will then choose the most-related question from the list (the one at the top), and run that question.</p><p>Chaining results from the <b>parse question</b> action are highly recommended.  Questions in the action result of <b>parse question</b> are, not surprisingly, already parsed. As a result, using the <b>run query</b> on a parsed question will ensure that the top result in the list is the question that is given.</p><p>For example, giving the <b>query</b> 'all IP addresses' to the <b>parse question</b> will return the same list as above in an action result.  Similarly, giving the parsed query 'Get Static IP Addresses from all machines' to <b>parse question</b> will have 'Get Static IP Addresses from all machines' at the top as well.</p><p>By parsing the question Tanium is given, Tanium gives back questions that it knows it will understand.  And by giving Tanium a question that it knows it will understand (by using <b>parse question</b>), using the <b>run query</b> action with the <b>is_parsed</b> option checked/True, Tanium will be guaranteed to run the question, without having to save it.</p>",
             "type": "investigate",
             "identifier": "execute_question",
             "read_only": true,
@@ -142,6 +165,24 @@
                     "description": "Parsed question",
                     "required": false,
                     "data_type": "boolean"
+                },
+                "timeout_seconds": {
+                    "order": 2,
+                    "description": "If supplied and not 0, timeout in seconds instead of when object expires",
+                    "required": true,
+                    "data_type": "numeric",
+                    "default": 60
+                },
+                "ip_hostname": {
+                    "data_type": "string",
+                    "order": 4,
+                    "description": "Hostname/IP to run query on",
+                    "contains": [
+                        "ip",
+                        "host name"
+                    ],
+                    "required": true,
+                    "primary": true
                 }
             },
             "render": {
@@ -153,24 +194,30 @@
             },
             "output": [
                 {
-                    "data_path": "action_result.data.*.rows",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.data.*.columns",
-                    "data_type": "string"
-                },
-                {
                     "data_path": "action_result.status",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
                 },
                 {
-                    "data_path": "action_result.message",
-                    "data_type": "string"
+                    "data_path": "action_result.parameter.ip_hostname",
+                    "data_type": "string",
+                    "example_values": [
+                        "10.1.18.132"
+                    ],
+                    "contains": [
+                        "ip",
+                        "host name"
+                    ]
                 },
                 {
-                    "data_path": "action_result.summary.number_of_results_found",
-                    "data_type": "numeric"
+                    "data_path": "action_result.parameter.is_parsed",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false,
+                        true
+                    ]
                 },
                 {
                     "data_path": "action_result.parameter.query",
@@ -178,19 +225,63 @@
                     "contains": [
                         "tanium question",
                         "tanium parsed question"
+                    ],
+                    "example_values": [
+                        "BIOS Information"
                     ]
                 },
                 {
-                    "data_path": "action_result.parameter.is_parsed",
-                    "data_type": "boolean"
+                    "data_path": "action_result.parameter.timeout_seconds",
+                    "data_type": "numeric",
+                    "example_values": [
+                        300
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.columns",
+                    "data_type": "string",
+                    "example_values": [
+                        "Count"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.rows",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.rows.*",
+                    "data_type": "string",
+                    "example_values": [
+                        "2"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.number_of_results_found",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Number of results found: 1"
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 }
             ],
             "versions": "EQ(*)"
@@ -198,7 +289,7 @@
         {
             "action": "execute action",
             "description": "Execute Tanium action (package)",
-            "verbose": "Use this action to run packages on endpoints. You will be required to know the Package name and the parameters to pass.<br>For example the <b>Registry - Create Key</b> package is used to create a Registry key on an endpoint. It takes two parameters<ul><li><b>$1</b> is the Architecture</li> and <li><b>$2</b> is the Registry Key Name</li></ul>So use the <b>execute action</b> action with the <b>package_name</b> set to:<br><b>Registry - Create Key{$1=64,$2=HKLM\\Software\\Phantom\\TestKey}</b><br>The Tanium UI displays the documentation of the package, its name, and parameters.<br>The action behavior depends a lot on the package used. In most cases the action status pertains to if the package was executed or not, i.e. the Tanium API will treat the execution of the package as successful. For instance, in the above example $1 specifies the architecture and $2 is the key to create. If the HKLM\\Software\\Phantom key is not present in the HKLM hive, the package will fail to create the HKLM\\Software\\Phantom\\TestKey key, however the API will return a success since an attempt was made.",
+            "verbose": "Use this action to run packages on endpoints. You will be required to know the Package name and the parameters to pass.<br>For example the <b>Registry - Create Key</b> package is used to create a Registry key on an endpoint. It takes two parameters<ul><li><b>$1</b> is the Architecture</li> and <li><b>$2</b> is the Registry Key Name</li></ul>So use the <b>execute action</b> with the <b>package_name</b> set to:<br><b>Registry - Create Key{$1=64,$2=HKLM\\Software\\Phantom\\TestKey}</b><br>The Tanium UI displays the documentation of the package, its name, and parameters.<br>The action behavior depends a lot on the package used. In most cases the action status pertains to if the package was executed or not, i.e. the Tanium API will treat the execution of the package as successful. For instance, in the above example, $1 specifies the architecture and $2 is the key to create. If the HKLM\\Software\\Phantom key is not present in the HKLM hive, the package will fail to create the HKLM\\Software\\Phantom\\TestKey key, however, the API will return a success since an attempt was made.",
             "type": "generic",
             "identifier": "execute_action",
             "read_only": false,
@@ -209,8 +300,9 @@
                 "ip_hostname": {
                     "data_type": "string",
                     "order": 0,
-                    "description": "Hostname/IP of machine to run action on.",
+                    "description": "Hostname/IP of machine to run action on",
                     "required": true,
+                    "primary": true,
                     "contains": [
                         "ip",
                         "host name"
@@ -221,7 +313,27 @@
                     "order": 1,
                     "description": "Name of Tanium package",
                     "required": true,
-                    "primary": true
+                    "primary": true,
+                    "contains": [
+                        "tanium package name"
+                    ]
+                },
+                "action_group": {
+                    "data_type": "string",
+                    "order": 2,
+                    "description": "Action Group to execute on",
+                    "required": true,
+                    "primary": false,
+                    "contains": [
+                        "tanium action group"
+                    ]
+                },
+                "timeout_seconds": {
+                    "order": 3,
+                    "description": "If supplied and not 0, timeout in seconds instead of when object expires",
+                    "required": true,
+                    "data_type": "numeric",
+                    "default": 60
                 }
             },
             "render": {
@@ -232,6 +344,25 @@
             },
             "output": [
                 {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "column_name": "Status",
+                    "column_order": 1,
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.action_group",
+                    "data_type": "string",
+                    "example_values": [
+                        "WinGroup"
+                    ],
+                    "contains": [
+                        "tanium action group"
+                    ]
+                },
+                {
                     "data_path": "action_result.parameter.ip_hostname",
                     "data_type": "string",
                     "contains": [
@@ -239,37 +370,112 @@
                         "host name"
                     ],
                     "column_name": "Name/IP Address",
-                    "column_order": 0
+                    "column_order": 0,
+                    "example_values": [
+                        "win7ult32.corp.contoso.com"
+                    ]
                 },
                 {
                     "data_path": "action_result.parameter.package_name",
-                    "data_type": "string"
+                    "data_type": "string",
+                    "example_values": [
+                        "Registry - Delete Key{$1=32,$2=HKLM\\Software\\Phantom\\TestKey}"
+                    ],
+                    "contains": [
+                        "tanium package name"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.timeout_seconds",
+                    "data_type": "numeric",
+                    "example_values": [
+                        300
+                    ]
                 },
                 {
                     "data_path": "action_result.data",
                     "data_type": "string"
                 },
                 {
+                    "data_path": "action_result.data.*.failed.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.finished.256:Completed.",
+                    "data_type": "string",
+                    "example_values": [
+                        "win7ult32.corp.contoso.com"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.finished.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.running.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.success.256:Completed.",
+                    "data_type": "string",
+                    "example_values": [
+                        "win7ult32.corp.contoso.com"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.success.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.unknown.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
                     "data_path": "action_result.summary",
                     "data_type": "string"
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string"
+                    "data_path": "action_result.summary.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "256"
+                    ]
                 },
                 {
                     "data_path": "action_result.message",
                     "data_type": "string",
-                    "column_name": "Status",
-                    "column_order": 1
+                    "example_values": [
+                        "failed: 0, finished: 1, running: 0, success: 1, unknown: 0, Done Key: success, Passed Count: 1\nCompleted\nwin7ult32.corp.contoso.com\n"
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 }
             ],
             "versions": "EQ(*)"
@@ -277,7 +483,7 @@
         {
             "action": "reboot system",
             "description": "Reboots the system",
-            "type": "contain",
+            "type": "generic",
             "identifier": "reboot_system",
             "read_only": false,
             "parameters": {
@@ -291,6 +497,33 @@
                         "ip",
                         "host name"
                     ]
+                },
+                "action_group": {
+                    "data_type": "string",
+                    "order": 1,
+                    "description": "Action Group to execute on",
+                    "required": true,
+                    "primary": false,
+                    "contains": [
+                        "tanium action group"
+                    ]
+                },
+                "timeout_seconds": {
+                    "order": 2,
+                    "description": "If supplied and not 0, timeout in seconds instead of when object expires",
+                    "required": true,
+                    "data_type": "numeric",
+                    "default": 60
+                },
+                "package_name": {
+                    "data_type": "string",
+                    "order": 4,
+                    "description": "Name of Tanium package",
+                    "required": true,
+                    "primary": true,
+                    "contains": [
+                        "tanium package name"
+                    ]
                 }
             },
             "render": {
@@ -301,6 +534,25 @@
             },
             "output": [
                 {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ],
+                    "column_name": "Status",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.parameter.action_group",
+                    "data_type": "string",
+                    "example_values": [
+                        "Default"
+                    ],
+                    "contains": [
+                        "tanium action group"
+                    ]
+                },
+                {
                     "data_path": "action_result.parameter.ip_hostname",
                     "data_type": "string",
                     "contains": [
@@ -308,33 +560,113 @@
                         "host name"
                     ],
                     "column_name": "Name/IP Address",
-                    "column_order": 0
+                    "column_order": 0,
+                    "example_values": [
+                        "tanium-01"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.package_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "list directories"
+                    ],
+                    "contains": [
+                        "tanium package name"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.timeout_seconds",
+                    "data_type": "numeric",
+                    "example_values": [
+                        300,
+                        60
+                    ]
                 },
                 {
                     "data_path": "action_result.data",
                     "data_type": "string"
                 },
                 {
+                    "data_path": "action_result.data.*.failed.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.finished.51053:Completed.",
+                    "data_type": "string",
+                    "example_values": [
+                        "tanium-01"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.finished.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.running.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.success.51053:Completed.",
+                    "data_type": "string",
+                    "example_values": [
+                        "tanium-01"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.success.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.unknown.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
                     "data_path": "action_result.summary",
                     "data_type": "string"
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string"
+                    "data_path": "action_result.summary.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "51053"
+                    ]
                 },
                 {
                     "data_path": "action_result.message",
                     "data_type": "string",
-                    "column_name": "Status",
-                    "column_order": 1
+                    "example_values": [
+                        "failed: 0, finished: 1, running: 0, success: 1, unknown: 0, Done Key: success, Passed Count: 1\nCompleted\ntanium-01\n"
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 }
             ],
             "versions": "EQ(*)"
@@ -342,7 +674,7 @@
         {
             "action": "list processes",
             "description": "List the running processes on a machine",
-            "type": "contain",
+            "type": "investigate",
             "identifier": "list_processes",
             "read_only": false,
             "parameters": {
@@ -354,7 +686,25 @@
                         "ip",
                         "host name"
                     ],
-                    "required": true
+                    "required": true,
+                    "primary": true
+                },
+                "sensor": {
+                    "data_type": "string",
+                    "order": 1,
+                    "description": "Name of Tanium sensor",
+                    "required": true,
+                    "primary": true,
+                    "contains": [
+                        "tanium sensor"
+                    ]
+                },
+                "timeout_seconds": {
+                    "order": 2,
+                    "description": "If supplied and not 0, timeout in seconds instead of when object expires",
+                    "required": true,
+                    "data_type": "numeric",
+                    "default": 60
                 }
             },
             "render": {
@@ -365,35 +715,11 @@
             },
             "output": [
                 {
-                    "data_path": "action_result.data.*.name",
-                    "data_type": "string",
-                    "column_name": "Process Name",
-                    "contains": [
-                        "process name"
-                    ],
-                    "column_order": 0
-                },
-                {
-                    "data_path": "action_result.data.*.count",
-                    "data_type": "string",
-                    "column_name": "Count",
-                    "column_order": 1
-                },
-                {
                     "data_path": "action_result.status",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.message",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.summary.query_text",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.summary.number_of_results_found",
-                    "data_type": "numeric"
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
                 },
                 {
                     "data_path": "action_result.parameter.ip_hostname",
@@ -401,15 +727,84 @@
                     "contains": [
                         "ip",
                         "host name"
+                    ],
+                    "example_values": [
+                        "win7ult32.corp.contoso.com"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.sensor",
+                    "data_type": "string",
+                    "example_values": [
+                        "Running Processes With User"
+                    ],
+                    "contains": [
+                        "tanium sensor"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.timeout_seconds",
+                    "data_type": "numeric",
+                    "example_values": [
+                        300
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.count",
+                    "data_type": "string",
+                    "column_name": "Count",
+                    "column_order": 1,
+                    "example_values": [
+                        "1"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.name",
+                    "data_type": "string",
+                    "column_name": "Process Name",
+                    "contains": [
+                        "process name",
+                        "file name"
+                    ],
+                    "column_order": 0,
+                    "example_values": [
+                        "TaniumClient.exe"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.number_of_results_found",
+                    "data_type": "numeric",
+                    "example_values": [
+                        36
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.query_text",
+                    "data_type": "string",
+                    "example_values": [
+                        "Get Running Processes from all machines with Computer Name = \"win7ult32.corp.contoso.com\""
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Number of results found: 36\nQuery text: Get Running Processes from all machines with Computer Name = \"win7ult32.corp.contoso.com\""
                     ]
                 },
                 {
                     "data_path": "summary.total_objects",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 }
             ],
             "versions": "EQ(*)"
@@ -417,7 +812,7 @@
         {
             "action": "terminate process",
             "description": "Terminate a process",
-            "type": "contain",
+            "type": "generic",
             "identifier": "terminate_process",
             "read_only": false,
             "parameters": {
@@ -429,7 +824,8 @@
                         "ip",
                         "host name"
                     ],
-                    "required": true
+                    "required": true,
+                    "primary": true
                 },
                 "name": {
                     "description": "Name of process to terminate",
@@ -441,6 +837,43 @@
                     ],
                     "required": true,
                     "primary": true
+                },
+                "action_group": {
+                    "data_type": "string",
+                    "order": 2,
+                    "description": "Action Group to execute on",
+                    "required": true,
+                    "primary": false,
+                    "contains": [
+                        "tanium action group"
+                    ]
+                },
+                "timeout_seconds": {
+                    "order": 3,
+                    "description": "If supplied and not 0, timeout in seconds instead of when object expires (10 min)",
+                    "required": true,
+                    "data_type": "numeric",
+                    "default": 60
+                },
+                "sensor": {
+                    "data_type": "string",
+                    "order": 4,
+                    "description": "Name of Tanium sensor",
+                    "required": true,
+                    "primary": true,
+                    "contains": [
+                        "tanium sensor"
+                    ]
+                },
+                "package_name": {
+                    "data_type": "string",
+                    "order": 5,
+                    "description": "Name of Tanium package",
+                    "required": true,
+                    "primary": true,
+                    "contains": [
+                        "tanium package name"
+                    ]
                 }
             },
             "render": {
@@ -451,11 +884,22 @@
             },
             "output": [
                 {
-                    "data_path": "action_result.parameter.name",
+                    "data_path": "action_result.status",
                     "data_type": "string",
+                    "column_name": "Status",
+                    "column_order": 1,
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.action_group",
+                    "data_type": "string",
+                    "example_values": [
+                        "All Computers"
+                    ],
                     "contains": [
-                        "file name",
-                        "process name"
+                        "tanium action group"
                     ]
                 },
                 {
@@ -466,41 +910,300 @@
                         "host name"
                     ],
                     "column_name": "Name/IP Address",
-                    "column_order": 0
+                    "column_order": 0,
+                    "example_values": [
+                        "win7ult32.corp.contoso.com"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.name",
+                    "data_type": "string",
+                    "contains": [
+                        "file name",
+                        "process name"
+                    ],
+                    "example_values": [
+                        "notepad.exe"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.package_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "list directories"
+                    ],
+                    "contains": [
+                        "tanium package name"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.sensor",
+                    "data_type": "string",
+                    "example_values": [
+                        "Running Processes With User"
+                    ],
+                    "contains": [
+                        "tanium sensor"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.timeout_seconds",
+                    "data_type": "numeric",
+                    "example_values": [
+                        300
+                    ]
                 },
                 {
                     "data_path": "action_result.data",
                     "data_type": "string"
                 },
                 {
+                    "data_path": "action_result.data.*.failed.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.finished.257:Completed.",
+                    "data_type": "string",
+                    "example_values": [
+                        "win7ult32.corp.contoso.com"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.finished.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.running.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.success.257:Completed.",
+                    "data_type": "string",
+                    "example_values": [
+                        "win7ult32.corp.contoso.com"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.success.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.unknown.total",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
                     "data_path": "action_result.summary",
                     "data_type": "string"
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string"
+                    "data_path": "action_result.summary.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "257"
+                    ]
                 },
                 {
                     "data_path": "action_result.message",
                     "data_type": "string",
-                    "column_name": "Status",
-                    "column_order": 1
+                    "example_values": [
+                        "failed: 0, finished: 1, running: 0, success: 1, unknown: 0, Done Key: success, Passed Count: 1\nCompleted\nwin7ult32.corp.contoso.com\n"
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 },
                 {
                     "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric"
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 }
             ],
             "versions": "EQ(*)"
         },
         {
+            "action": "manual query",
+            "description": "Ask a Manual question without parsing",
+            "verbose": "This action takes a human-readable string to in turn ask Tanium a question. The question is broken into three different parameters:<ul><li><b>left_side</b>: This is what you are requesting back from Tanium. This is ingested as a string of options separated by a semicolon (Ex: &quotComputer Name; IP Address&quot would return both Computer names and IP addresses)</li><li><b>right_side</b>: This is the filter to pass to Tanium. Different filters should be separated by a semicolon. (Ex: &quotOperating Systems, that contains Windows; Operating System, that contains:Linux&quot)</li><li><b>query_options</b>: These are the options passed to Tanium. (Ex: &quotand&quot, &quot ) ;or&quot etc...)",
+            "type": "investigate",
+            "identifier": "manual_query",
+            "read_only": true,
+            "parameters": {
+                "left_side": {
+                    "data_type": "string",
+                    "order": 0,
+                    "description": "Tanium Response set",
+                    "contains": [
+                        "tanium response"
+                    ],
+                    "required": true,
+                    "primary": true
+                },
+                "right_side": {
+                    "data_type": "string",
+                    "order": 1,
+                    "description": "The filter for the Tanium question",
+                    "contains": [
+                        "tanium filter"
+                    ],
+                    "required": false,
+                    "primary": true
+                },
+                "query_options": {
+                    "data_type": "string",
+                    "order": 2,
+                    "description": "Options for Tanium question",
+                    "contains": [
+                        "tanium options"
+                    ],
+                    "required": false,
+                    "primary": true,
+                    "default": [
+                        "and",
+                        "or"
+                    ]
+                },
+                "timeout_seconds": {
+                    "order": 3,
+                    "description": "If supplied and not 0, timeout in seconds instead of when object expires",
+                    "required": true,
+                    "data_type": "numeric",
+                    "default": 60
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.left_side",
+                    "data_type": "string",
+                    "column_name": "Response Set",
+                    "column_order": 2,
+                    "contains": [
+                        "tanium response"
+                    ],
+                    "example_values": [
+                        "Computer Name;IP Address"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.query_options",
+                    "data_type": "string",
+                    "column_name": "Query Option",
+                    "column_order": 4,
+                    "contains": [
+                        "tanium options"
+                    ],
+                    "example_values": [
+                        "or"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.right_side",
+                    "data_type": "string",
+                    "column_name": "Query Filter",
+                    "column_order": 3,
+                    "contains": [
+                        "tanium filter"
+                    ],
+                    "example_values": [
+                        "Operating System, that contains:Windows; Operating System, that contains:Linux"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.timeout_seconds",
+                    "data_type": "numeric",
+                    "example_values": [
+                        300
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.count",
+                    "data_type": "string",
+                    "column_name": "Count",
+                    "column_order": 0,
+                    "example_values": []
+                },
+                {
+                    "data_path": "action_result.data.*.name",
+                    "data_type": "string",
+                    "column_name": "IP/Hostname",
+                    "column_order": 1,
+                    "example_values": []
+                },
+                {
+                    "data_path": "action_result.summary.number_of_results_found",
+                    "data_type": "numeric",
+                    "example_values": [
+                        7
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.query_text",
+                    "data_type": "string",
+                    "example_values": [
+                        "Get Computer Name and IP Address from all machines with ( Operating System containing \"Windows\" or Operating System containing \"Linux\" )"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Number of results found: 7\nQuery text: Get Computer Name and IP Address from all machines with ( Operating System containing \"Windows\" or Operating System containing \"Linux\" )"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "versions": "EQ(*)",
+            "render": {
+                "width": 12,
+                "title": "Manual Query",
+                "type": "table",
+                "height": 5
+            }
+        },
+        {
             "action": "parse question",
-            "description": "Retrieves related questions to a possible Tanium question.",
-            "verbose": "<p>The <b>parse question</b> action is what allows the use of custom queries.  Tanium itself does not accept custom queries, and will instead provide suggestions on pre-made queries that Tanium will accept.  The action result contains <b>question_text</b>, which are essentially Tanium-approved questions whose structure best match the query that was given.  The <b>question_text</b> is given the data type of <b>tanium parsed question</b>.  This allows contextual actions to be taken so that the questions can then be used in <b>run query</b>.</p><p>The order of the <b>question_text</b> within the action output is very important.  Tanium scores each parsed question based upon how much it matches the given query.  That is, the higher the score that Tanium has given, the higher it will appear in the list.  Each question in the list is given an index as well.  For example, if given 'ip addresses', Tanium decides that 'Get IP Address from all machines' is the most related - giving it a score of 6031 and an index of 0.  Similarly, the Tanium decides that, though related to 'ip address', the question 'Get Static IP Addresses from all machines' will have a score of 120 and an index of 10.</p>",
+            "description": "Retrieves related questions to a possible Tanium question",
+            "verbose": "<p>The <b>parse question</b> action is what allows the use of custom queries.  Tanium itself does not accept custom queries, and will instead provide suggestions on pre-made queries that Tanium will accept.  The action result contains <b>question_text</b>, which are essentially Tanium-approved questions whose structure best match the query that was given.  The <b>question_text</b> is given the data type of <b>tanium parsed question</b>.  This allows contextual actions to be taken so that the questions can then be used in the <b>run query</b>.</p><p>The order of the <b>question_text</b> within the action output is very important.  Tanium scores each parsed question based upon how much it matches the given query.  That is, the higher the score that Tanium has given, the higher it will appear in the list.  Each question in the list is given an index as well.  For example, if given 'ip addresses', Tanium decides that 'Get IP Address from all machines' is the most related - giving it a score of 6031 and an index of 0.  Similarly, the Tanium decides that, though related to 'ip address', the question 'Get Static IP Addresses from all machines' will have a score of 120 and an index of 10.</p>",
             "type": "investigate",
             "identifier": "get_parsed_questions",
             "read_only": true,
@@ -509,6 +1212,10 @@
                     "data_type": "string",
                     "order": 0,
                     "description": "Query to find related questions for",
+                    "contains": [
+                        "tanium question",
+                        "tanium parsed question"
+                    ],
                     "required": true,
                     "primary": true
                 }
@@ -521,16 +1228,31 @@
             },
             "output": [
                 {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.query",
+                    "data_type": "string",
+                    "contains": [
+                        "tanium question",
+                        "tanium parsed question"
+                    ],
+                    "example_values": [
+                        "Count"
+                    ]
+                },
+                {
                     "data_path": "action_result.data.*.question.index",
                     "data_type": "numeric",
                     "column_order": 0,
-                    "column_name": "Index"
-                },
-                {
-                    "data_path": "action_result.data.*.question.score",
-                    "data_type": "numeric",
-                    "column_order": 2,
-                    "column_name": "Score"
+                    "column_name": "Index",
+                    "example_values": [
+                        0
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.question.question_text",
@@ -539,27 +1261,51 @@
                     "column_name": "Question Text",
                     "contains": [
                         "tanium parsed question"
+                    ],
+                    "example_values": [
+                        "Get Tanium Buffer Count from all machines"
                     ]
                 },
                 {
-                    "data_path": "action_result.status",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.message",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.parameter.query",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "summary.total_objects",
-                    "data_type": "numeric"
+                    "data_path": "action_result.data.*.question.score",
+                    "data_type": "numeric",
+                    "column_order": 2,
+                    "column_name": "Score",
+                    "example_values": [
+                        5541
+                    ]
                 },
                 {
                     "data_path": "action_result.summary",
                     "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        5
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Total objects: 5"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
                 }
             ],
             "versions": "EQ(*)"

@@ -1,0 +1,163 @@
+{% extends 'widgets/widget_template.html' %}
+{% load custom_template %}
+
+{% block custom_title_prop %}{% if title_logo %}style="background-size: auto 60%; background-position: 50%; background-repeat: no-repeat; background-image: url('/app_resource/{{ title_logo }}');"{% endif %}{% endblock %}
+{% block title1 %}{{ title1 }}{% endblock %}
+{% block title2 %}{{ title2 }}{% endblock %}
+{% block custom_tools %}
+{% endblock %}
+{% block widget_content %} <!-- Main Start Block -->
+
+<!-- File: tanium_run_query.html
+  Copyright (c) 2016-2019 Splunk Inc.
+
+  SPLUNK CONFIDENTIAL - Use or disclosure of this material in whole or in part
+  without a valid written license from Splunk Inc. is PROHIBITED.
+-->
+<style>
+
+    .tanium a:hover {
+        text-decoration:underline;
+    }
+
+    .tanium .wf-h4-style {
+        font-size : 20px
+    }
+
+    .tanium .wf-table-vertical .dataTable td {
+        vertical-align: top;
+        border-left: none !important;
+        border-right: none !important;
+        border-bottom: none !important;
+    }
+
+    .tanium .wf-table-vertical {
+        width: initial;
+        font-size: 12px;
+    }
+
+    .tanium .wf-table-vertical td{
+        padding: 5px;
+        border: 1px solid !important;
+    }
+
+    .tanium .wf-table-vertical tr td:first-child {
+        font-weight: bold;
+    }
+
+    .tanium .dataTable th.widget-th {
+        border-top: 1px solid !important;
+        border-bottom: 1px solid !important;
+    }
+
+    .tanium .dataTable td {
+        vertical-align: top;
+    }
+
+    .tanium .dataTable td.widget-td a{
+        font-size: 12px;
+    }
+
+    .tanium .dataTable {
+        font-size: 12px;
+    }
+
+    .tanium .overflow-column {
+        overflow: auto;
+    }
+
+
+</style>
+
+<div class="tanium" style="overflow: auto; width: 100% height: 100%; padding-left:10px; padding-right:10px">
+    <!-- Main Div -->
+
+    {% for result in results %} <!-- loop for each result -->
+        {% if not result.data %}
+            <h4 class="wf-h4-style">No data found</h4>
+        {% else %}
+            <h4 class="wf-h4-style">Param Info</h4>
+            <table class="wf-table-vertical">
+                <tr>
+                    <td>IP/Hostname</td>
+                    <td>
+                        <a href="javascript:;" onclick="context_menu(this, [{'contains': ['ip', 'host name'], 'value':'{{ result.param.ip_hostname }}' }], 0, {{ container.id }}, null, false);">
+                            {{ result.param.ip_hostname }}
+                            &nbsp;
+                            <span class="fa fa-caret-down" style="font-size: smaller;"></span>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Query</td>
+                    <td>
+                        <a href="javascript:;" onclick="context_menu(this, [{'contains': ['tanium question', 'tanium parsed question'], 'value':'{{ result.param.query }}' }], 0, {{ container.id }}, null, false);">
+                            {{ result.param.query }}
+                            &nbsp;
+                            <span class="fa fa-caret-down" style="font-size: smaller;"></span>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Is Parsed</td>
+                    <td>
+                        {{ result.param.is_parsed }}
+                    </td>
+                </tr>
+                {% if result.param.timeout_seconds %}
+                    <tr>
+                        <td>Timeout Seconds</td>
+                        <td>
+                            {{ result.param.timeout_seconds }}
+                        </td>
+                    </tr>
+                {% endif %}
+            </table>
+
+            &nbsp;
+            <h4 class="wf-h4-style">Run Query Results</h4>
+
+            <div class="run_query_table overflow-column">
+                <table class="phantom-table dataTable">
+                    <thead>
+                        {% for column_header in result.data.column_headers %}
+                            <th class="widget-th">{{ column_header }}</th>
+                        {% endfor %}
+                    </thead>
+                    <tbody>
+                    {% for column_value in result.data.column_values %}
+                        <tr>
+                            {% for item in column_value %}
+                                <td class="widget-td">{{ item }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+<script>
+$.extend(true, $.fn.dataTable.defaults, {
+    "searching": true,
+    "bLengthChange": false,
+    "language": {
+      "paginate": {
+        "previous": "<i class='fa fa-angle-left fa-lg'></i>",
+        "next": "<i class='fa fa-angle-right fa-lg'></i>"
+      },
+      "emptyTable": "No data available"
+    },
+    "dom": '<"top">rt<"bottom"p><"clear">',
+    drawCallback: function(settings) {
+      var pagination = $(this).closest('.dataTables_wrapper').find('.dataTables_paginate');
+      pagination.toggle(this.api().page.info().pages > 1);
+    }
+  });
+  $('.dataTable').DataTable();
+
+</script>
+
+{% endblock %}
