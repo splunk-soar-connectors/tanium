@@ -1043,7 +1043,7 @@
         },
         {
             "action": "manual query",
-            "description": "Ask a Manual question no parsing",
+            "description": "Ask a Manual question without parsing",
             "verbose": "This action takes a human-readable string to in turn ask Tanium a question. The question is broken into three different parameters:<ul><li><b>left_side</b>: This is what you are requesting back from Tanium. This is ingested as a string of options separated by a semicolon (Ex: &quotComputer Name; IP Address&quot would return both Computer names and IP addresses)</li><li><b>right_side</b>: This is the filter to pass to Tanium. Different filters should be separated by a semicolon. (Ex: &quotOperating Systems, that contains Windows; Operating System, that contains:Linux&quot)</li><li><b>query_options</b>: These are the options passed to Tanium. (Ex: &quotand&quot, &quot ) ;or&quot etc...)",
             "type": "investigate",
             "identifier": "manual_query",
