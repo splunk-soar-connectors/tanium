@@ -6,3 +6,4 @@ tanium/tanium_connector.py
 tanium/tanium_view.py 
 .git*
 .gitlab-ci.yml
+whitesource-results
