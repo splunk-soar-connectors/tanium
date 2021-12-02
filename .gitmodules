@@ -1,4 +1,0 @@
-[submodule "pytanlib"]
-	path = pytanlib
-	url = git@cd.splunkdev.com:phantom-external/pytan-2-2-2.git
-	ignore = dirty
