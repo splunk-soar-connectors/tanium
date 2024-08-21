@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -24,8 +24,5 @@ class AuditData(BaseType):
         self.creation_time = None
         self.modification_time = None
         self.last_modified_by = None
-        
-        
-
 
 

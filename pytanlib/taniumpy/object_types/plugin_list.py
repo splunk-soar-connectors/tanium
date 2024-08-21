@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -19,10 +19,9 @@ class PluginList(BaseType):
             complex_properties={'cache_info': CacheInfo},
             list_properties={'plugin': Plugin},
         )
-        
+
         self.cache_info = None
         self.plugin = []
 
-from plugin import Plugin
 from cache_info import CacheInfo
-
+from plugin import Plugin

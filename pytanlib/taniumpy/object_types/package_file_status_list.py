@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -19,9 +19,8 @@ class PackageFileStatusList(BaseType):
             complex_properties={},
             list_properties={'status': PackageFileStatus},
         )
-        
-        
+
+
         self.status = []
 
 from package_file_status import PackageFileStatus
-

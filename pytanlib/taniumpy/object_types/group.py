@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -39,9 +39,8 @@ class Group(BaseType):
         self.sub_groups = None
         self.filters = None
         self.parameters = None
-        
 
-from group_list import GroupList
+
 from filter_list import FilterList
+from group_list import GroupList
 from parameter_list import ParameterList
-

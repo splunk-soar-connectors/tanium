@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -55,7 +55,6 @@ class Filter(BaseType):
         self.start_time = None
         self.end_time = None
         self.sensor = None
-        
+
 
 from sensor import Sensor
-

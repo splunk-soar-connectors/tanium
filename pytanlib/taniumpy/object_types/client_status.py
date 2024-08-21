@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -44,8 +44,5 @@ class ClientStatus(BaseType):
         self.port_number = None
         self.public_key_valid = None
         self.cache_row_id = None
-        
-        
-
 
 

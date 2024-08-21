@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -25,8 +25,7 @@ class ParseResultGroup(BaseType):
         self.question_text = None
         self.parse_results = None
         self.question = None
-        
+
 
 from parse_result_list import ParseResultList
 from question import Question
-

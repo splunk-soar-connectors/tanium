@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -69,12 +69,11 @@ class PackageSpec(BaseType):
         self.parameters = None
         self.sensors = None
         self.metadata = None
-        
 
+
+from group import Group
+from metadata_list import MetadataList
 from package_file_list import PackageFileList
 from package_file_template_list import PackageFileTemplateList
-from group import Group
 from parameter_list import ParameterList
 from sensor_list import SensorList
-from metadata_list import MetadataList
-

@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -19,10 +19,9 @@ class ComputerGroupList(BaseType):
             complex_properties={'cache_info': CacheInfo},
             list_properties={'computer_group': ComputerGroup},
         )
-        
+
         self.cache_info = None
         self.computer_group = []
 
-from computer_group import ComputerGroup
 from cache_info import CacheInfo
-
+from computer_group import ComputerGroup

@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -57,14 +57,11 @@ class Action(BaseType):
         self.history_saved_question = None
         self.saved_action = None
         self.metadata = None
-        
+
 
 from group import Group
-from group import Group
-from package_spec import PackageSpec
-from user import User
-from user import User
-from saved_question import SavedQuestion
-from saved_action import SavedAction
 from metadata_list import MetadataList
-
+from package_spec import PackageSpec
+from saved_action import SavedAction
+from saved_question import SavedQuestion
+from user import User

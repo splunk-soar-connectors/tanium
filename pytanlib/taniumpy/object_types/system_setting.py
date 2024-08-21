@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -39,8 +39,7 @@ class SystemSetting(BaseType):
         self.cache_row_id = None
         self.audit_data = None
         self.metadata = None
-        
+
 
 from audit_data import AuditData
 from metadata_list import MetadataList
-

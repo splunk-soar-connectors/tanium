@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -25,7 +25,6 @@ class UserRole(BaseType):
         self.name = None
         self.description = None
         self.permissions = None
-        
+
 
 from permission_list import PermissionList
-

@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -29,7 +29,6 @@ class CacheInfo(BaseType):
         self.cache_row_count = None
         self.expiration = None
         self.errors = None
-        
+
 
 from error_list import ErrorList
-

@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -21,7 +21,6 @@ class ActionStop(BaseType):
         )
         self.id = None
         self.action = None
-        
+
 
 from action import Action
-

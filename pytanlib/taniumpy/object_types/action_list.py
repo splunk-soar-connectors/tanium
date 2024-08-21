@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -20,12 +20,11 @@ class ActionList(BaseType):
                         'cache_info': CacheInfo},
             list_properties={'action': Action},
         )
-        
+
         self.info = None
         self.cache_info = None
         self.action = []
 
-from action_list_info import ActionListInfo
 from action import Action
+from action_list_info import ActionListInfo
 from cache_info import CacheInfo
-

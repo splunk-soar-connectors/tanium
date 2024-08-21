@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -57,9 +57,8 @@ class PluginSchedule(BaseType):
         self.arguments = None
         self.user = None
         self.last_run_sql = None
-        
+
 
 from plugin_argument_list import PluginArgumentList
-from user import User
 from plugin_sql import PluginSql
-
+from user import User

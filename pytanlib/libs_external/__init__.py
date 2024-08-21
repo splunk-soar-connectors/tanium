@@ -1,12 +1,10 @@
 """Adds this path to the PYTHONPATH so normal import usage can occur for external packages."""
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import os
 # import platform
 import sys
+
 # import warnings
 
 THIS_FILE = __file__

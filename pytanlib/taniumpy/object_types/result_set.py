@@ -1,10 +1,11 @@
-from .column_set import ColumnSet
-from .row import Row
-from .sensor import Sensor
 import csv
 import json
 import re
 from collections import OrderedDict
+
+from .column_set import ColumnSet
+from .row import Row
+from .sensor import Sensor
 
 
 class ResultSet(object):

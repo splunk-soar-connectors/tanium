@@ -7,7 +7,6 @@ import string
 import sys
 import threading
 import time
-
 from base64 import b64encode
 from datetime import datetime
 
@@ -24,9 +23,9 @@ path_adds = [parent_dir]
 
 try:
     import pytan
-    from pytan.xml_clean import xml_cleaner
     import requests
     import taniumpy
+    from pytan.xml_clean import xml_cleaner
 except Exception:
     raise
 

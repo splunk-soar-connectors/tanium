@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -69,11 +69,10 @@ class Plugin(BaseType):
         self.metadata = None
         self.commands = None
         self.permissions = None
-        
 
-from plugin_argument_list import PluginArgumentList
-from plugin_sql import PluginSql
+
 from metadata_list import MetadataList
-from plugin_command_list import PluginCommandList
 from permission_list import PermissionList
-
+from plugin_argument_list import PluginArgumentList
+from plugin_command_list import PluginCommandList
+from plugin_sql import PluginSql

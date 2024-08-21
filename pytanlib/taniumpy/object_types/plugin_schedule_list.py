@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -19,10 +19,9 @@ class PluginScheduleList(BaseType):
             complex_properties={'cache_info': CacheInfo},
             list_properties={'plugin_schedule': PluginSchedule},
         )
-        
+
         self.cache_info = None
         self.plugin_schedule = []
 
-from plugin_schedule import PluginSchedule
 from cache_info import CacheInfo
-
+from plugin_schedule import PluginSchedule

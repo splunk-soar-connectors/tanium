@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -19,9 +19,8 @@ class PackageFileTemplateList(BaseType):
             complex_properties={},
             list_properties={'file_template': PackageFileTemplate},
         )
-        
-        
+
+
         self.file_template = []
 
 from package_file_template import PackageFileTemplate
-

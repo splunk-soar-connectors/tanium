@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -20,12 +20,11 @@ class SystemStatusList(BaseType):
                         'cache_info': CacheInfo},
             list_properties={'client_status': ClientStatus},
         )
-        
+
         self.aggregate = None
         self.cache_info = None
         self.client_status = []
 
+from cache_info import CacheInfo
 from client_status import ClientStatus
 from system_status_aggregate import SystemStatusAggregate
-from cache_info import CacheInfo
-

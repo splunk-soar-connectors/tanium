@@ -13,8 +13,8 @@ path_adds = [parent_dir]
 [sys.path.insert(0, aa) for aa in path_adds if aa not in sys.path]
 
 try:
-    import taniumpy
     import pytan
+    import taniumpy
 except Exception:
     raise
 

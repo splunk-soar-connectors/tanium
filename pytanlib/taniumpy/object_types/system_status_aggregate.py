@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -43,7 +43,6 @@ class SystemStatusAggregate(BaseType):
         self.leader_count = None
         self.normal_count = None
         self.versions = None
-        
+
 
 from version_aggregate_list import VersionAggregateList
-

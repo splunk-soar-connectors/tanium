@@ -15,17 +15,20 @@
 #
 #
 # Phantom imports
-import phantom.app as phantom
-from phantom.base_connector import BaseConnector
-from phantom.action_result import ActionResult
-# import phantom.utils as ph_utils
+import json
+import os
 
+import phantom.app as phantom
+from phantom.action_result import ActionResult
+from phantom.base_connector import BaseConnector
+
+from pytanlib import pytan
 # THIS Connector imports
 from tanium_consts import *
 
-from pytanlib import pytan
-import os
-import json
+# import phantom.utils as ph_utils
+
+
 
 
 class TaniumConnector(BaseConnector):
@@ -776,6 +779,7 @@ class TaniumConnector(BaseConnector):
 if __name__ == '__main__':
 
     import sys
+
     import pudb
     pudb.set_trace()
 

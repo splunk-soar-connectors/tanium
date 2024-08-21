@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -19,9 +19,8 @@ class SensorQueryList(BaseType):
             complex_properties={},
             list_properties={'query': SensorQuery},
         )
-        
-        
+
+
         self.query = []
 
 from sensor_query import SensorQuery
-

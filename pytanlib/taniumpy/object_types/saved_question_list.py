@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -19,10 +19,9 @@ class SavedQuestionList(BaseType):
             complex_properties={'cache_info': CacheInfo},
             list_properties={'saved_question': SavedQuestion},
         )
-        
+
         self.cache_info = None
         self.saved_question = []
 
-from saved_question import SavedQuestion
 from cache_info import CacheInfo
-
+from saved_question import SavedQuestion

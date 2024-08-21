@@ -24,8 +24,8 @@ __copyright__ = 'Copyright 2015 Tanium'
 Copyright for PyTan
 """
 
-import sys
 import os
+import sys
 
 # disable python from creating .pyc files everywhere
 sys.dont_write_bytecode = True
@@ -41,28 +41,26 @@ try:
 except:
     pass
 
-import taniumpy  # noqa
-
-import pytan  # noqa
-import pytan.xml_clean  # noqa
-import pytan.utils  # noqa
-import pytan.handler  # noqa
-import pytan.sessions  # noqa
-import pytan.constants  # noqa
-import pytan.help  # noqa
-import pytan.exceptions  # noqa
-
-from pytan import exceptions  # noqa
-from pytan import utils  # noqa
-from pytan import constants  # noqa
-from pytan import pollers  # noqa
-from pytan import sessions  # noqa
-from pytan import help  # noqa
-from pytan.handler import Handler  # noqa
-
-
 # Set default logging handler to avoid "No handler found" warnings.
 import logging
+
+import pytan  # noqa
+import pytan.constants  # noqa
+import pytan.exceptions  # noqa
+import pytan.handler  # noqa
+import pytan.help  # noqa
+import pytan.sessions  # noqa
+import pytan.utils  # noqa
+import pytan.xml_clean  # noqa
+import taniumpy  # noqa
+from pytan import constants  # noqa
+from pytan import exceptions  # noqa
+from pytan import help  # noqa
+from pytan import pollers  # noqa
+from pytan import sessions  # noqa
+from pytan import utils  # noqa
+from pytan.handler import Handler  # noqa
+
 try:  # Python 2.7+
     from logging import NullHandler
 except ImportError:

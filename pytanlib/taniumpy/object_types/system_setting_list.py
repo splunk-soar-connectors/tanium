@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -19,10 +19,9 @@ class SystemSettingList(BaseType):
             complex_properties={'cache_info': CacheInfo},
             list_properties={'system_setting': SystemSetting},
         )
-        
+
         self.cache_info = None
         self.system_setting = []
 
-from system_setting import SystemSetting
 from cache_info import CacheInfo
-
+from system_setting import SystemSetting

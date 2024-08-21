@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -27,4 +27,3 @@ class PluginSql(BaseType):
 
 from plugin_sql_column import PluginSqlColumn
 from plugin_sql_result import PluginSqlResult
-

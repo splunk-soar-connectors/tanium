@@ -1,3 +1,5 @@
+from select import Select
+
 from action import Action
 from action_list import ActionList
 from action_list_info import ActionListInfo
@@ -61,7 +63,6 @@ from saved_action_policy import SavedActionPolicy
 from saved_action_row_id_list import SavedActionRowIdList
 from saved_question import SavedQuestion
 from saved_question_list import SavedQuestionList
-from select import Select
 from select_list import SelectList
 from sensor import Sensor
 from sensor_list import SensorList

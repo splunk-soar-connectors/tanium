@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -19,9 +19,8 @@ class ErrorList(BaseType):
             complex_properties={},
             list_properties={'error': XmlError},
         )
-        
-        
+
+
         self.error = []
 
 from xml_error import XmlError
-

@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -69,11 +69,10 @@ class Sensor(BaseType):
         self.subcolumns = None
         self.string_hints = None
         self.metadata = None
-        
 
-from sensor_query_list import SensorQueryList
+
+from metadata_list import MetadataList
 from parameter_list import ParameterList
+from sensor_query_list import SensorQueryList
 from sensor_subcolumn_list import SensorSubcolumnList
 from string_hint_list import StringHintList
-from metadata_list import MetadataList
-

@@ -8,15 +8,15 @@ import sys
 # disable python from creating .pyc files everywhere
 sys.dont_write_bytecode = True
 
+import base64
+import datetime
+import itertools
+import json
+import logging
 import os
+import re
 import socket
 import time
-import logging
-import json
-import datetime
-import re
-import itertools
-import base64
 from collections import OrderedDict
 
 my_file = os.path.abspath(__file__)
@@ -25,9 +25,9 @@ parent_dir = os.path.dirname(my_dir)
 path_adds = [parent_dir]
 [sys.path.insert(0, aa) for aa in path_adds if aa not in sys.path]
 
+import pytan
 import taniumpy
 import xmltodict
-import pytan
 
 __version__ = pytan.__version__
 

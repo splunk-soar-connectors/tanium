@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -25,7 +25,6 @@ class ComputerGroup(BaseType):
         self.name = None
         self.deleted_flag = None
         self.computer_specs = None
-        
+
 
 from computer_spec_list import ComputerSpecList
-

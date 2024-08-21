@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -24,8 +24,5 @@ class PluginArgument(BaseType):
         self.name = None
         self.type = None
         self.value = None
-        
-        
-
 
 

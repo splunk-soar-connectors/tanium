@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -23,7 +23,6 @@ class ParseResult(BaseType):
         self.id = None
         self.parameter_definition = None
         self.parameters = None
-        
+
 
 from parameter_list import ParameterList
-

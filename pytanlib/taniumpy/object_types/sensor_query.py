@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -26,8 +26,5 @@ class SensorQuery(BaseType):
         self.script = None
         self.script_type = None
         self.signature = None
-        
-        
-
 
 

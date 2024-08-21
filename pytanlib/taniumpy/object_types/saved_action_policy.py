@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -31,8 +31,6 @@ class SavedActionPolicy(BaseType):
         self.min_count = None
         self.saved_question_group = None
         self.row_filter_group = None
-        
+
 
 from group import Group
-from group import Group
-

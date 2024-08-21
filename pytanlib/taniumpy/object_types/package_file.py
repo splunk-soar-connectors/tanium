@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -47,7 +47,6 @@ class PackageFile(BaseType):
         self.last_download_progress_time = None
         self.deleted_flag = None
         self.file_status = None
-        
+
 
 from package_file_status_list import PackageFileStatusList
-

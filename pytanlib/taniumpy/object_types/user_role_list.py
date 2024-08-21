@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -19,9 +19,8 @@ class UserRoleList(BaseType):
             complex_properties={},
             list_properties={'role': UserRole},
         )
-        
-        
+
+
         self.role = []
 
 from user_role import UserRole
-

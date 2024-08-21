@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -25,7 +25,6 @@ class UploadFileStatus(BaseType):
         self.percent_complete = None
         self.file_cached = None
         self.file_parts = None
-        
+
 
 from upload_file_list import UploadFileList
-

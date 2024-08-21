@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -39,9 +39,8 @@ class User(BaseType):
         self.permissions = None
         self.roles = None
         self.metadata = None
-        
 
+
+from metadata_list import MetadataList
 from permission_list import PermissionList
 from user_role_list import UserRoleList
-from metadata_list import MetadataList
-

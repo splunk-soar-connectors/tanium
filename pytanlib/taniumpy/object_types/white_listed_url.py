@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -27,7 +27,6 @@ class WhiteListedUrl(BaseType):
         self.download_seconds = None
         self.url_regex = None
         self.metadata = None
-        
+
 
 from metadata_list import MetadataList
-

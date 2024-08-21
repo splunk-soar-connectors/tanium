@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -21,13 +21,12 @@ class Select(BaseType):
                         'group': Group},
             list_properties={},
         )
-        
+
         self.sensor = None
         self.filter = None
         self.group = None
-        
 
-from sensor import Sensor
+
 from filter import Filter
 from group import Group
-
+from sensor import Sensor

@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -22,8 +22,5 @@ class ActionListInfo(BaseType):
         )
         self.highest_id = None
         self.total_count = None
-        
-        
-
 
 

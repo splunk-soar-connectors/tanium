@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -30,8 +30,5 @@ class SensorSubcolumn(BaseType):
         self.ignore_case_flag = None
         self.hidden_flag = None
         self.exclude_from_parse_flag = None
-        
-        
-
 
 

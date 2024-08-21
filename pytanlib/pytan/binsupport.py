@@ -8,23 +8,23 @@ import sys
 # disable python from creating .pyc files everywhere
 sys.dont_write_bytecode = True
 
-import os
-import logging
-import code
-import traceback
-import pprint
 import argparse
-import getpass
-import json
-import string
-import csv
-import io
-import platform
-import datetime
-import time
+import code
 import copy
-from argparse import ArgumentDefaultsHelpFormatter as A1 # noqa
-from argparse import RawDescriptionHelpFormatter as A2 # noqa
+import csv
+import datetime
+import getpass
+import io
+import json
+import logging
+import os
+import platform
+import pprint
+import string
+import time
+import traceback
+from argparse import ArgumentDefaultsHelpFormatter as A1  # noqa
+from argparse import RawDescriptionHelpFormatter as A2  # noqa
 
 my_file = os.path.abspath(__file__)
 my_dir = os.path.dirname(my_file)

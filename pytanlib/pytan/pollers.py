@@ -9,12 +9,11 @@ import sys
 # disable python from creating .pyc files everywhere
 sys.dont_write_bytecode = True
 
-import os
 import logging
-import time
+import os
 import pprint
-from datetime import datetime
-from datetime import timedelta
+import time
+from datetime import datetime, timedelta
 
 my_file = os.path.abspath(__file__)
 my_dir = os.path.dirname(my_file)
@@ -22,8 +21,8 @@ parent_dir = os.path.dirname(my_dir)
 path_adds = [parent_dir]
 [sys.path.insert(0, aa) for aa in path_adds if aa not in sys.path]
 
-import taniumpy
 import pytan
+import taniumpy
 
 
 class QuestionPoller(object):

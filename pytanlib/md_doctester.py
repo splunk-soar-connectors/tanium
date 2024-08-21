@@ -14,22 +14,23 @@ __version__ = '2.1.0'
 N.B. I go through great lengths to keep this a single monolithic script.
      It's a thing.
 '''
-import os
-import sys
-import time
 import argparse
-import subprocess
-import logging
+import collections
+import fnmatch
+import getpass
+import glob
 import inspect
 import json
-import collections
-import getpass
-import fnmatch
-import glob
-from ConfigParser import SafeConfigParser
+import logging
+import os
+import subprocess
+import sys
+import time
 from argparse import ArgumentDefaultsHelpFormatter as A1  # noqa
 from argparse import RawDescriptionHelpFormatter as A2  # noqa
-from urllib2 import Request, urlopen, HTTPError, URLError
+
+from ConfigParser import SafeConfigParser
+from urllib2 import HTTPError, Request, URLError, urlopen
 
 reload(sys)
 sys.setdefaultencoding("utf-8")

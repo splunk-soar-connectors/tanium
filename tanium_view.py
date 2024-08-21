@@ -12,8 +12,9 @@
 # the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
 # either express or implied. See the License for the specific language governing permissions
 # and limitations under the License.
-from tanium_consts import *
 from phantom.json_keys import *
+
+from tanium_consts import *
 
 
 def get_ctx_result(provides, result):

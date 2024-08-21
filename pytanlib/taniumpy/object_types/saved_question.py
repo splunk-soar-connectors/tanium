@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -63,12 +63,9 @@ class SavedQuestion(BaseType):
         self.archive_owner = None
         self.mod_user = None
         self.metadata = None
-        
 
-from question import Question
-from package_spec_list import PackageSpecList
-from user import User
-from user import User
-from user import User
+
 from metadata_list import MetadataList
-
+from package_spec_list import PackageSpecList
+from question import Question
+from user import User

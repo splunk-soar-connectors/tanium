@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -24,8 +24,5 @@ class ComputerGroupSpec(BaseType):
         self.id = None
         self.computer_name = None
         self.ip_address = None
-        
-        
-
 
 

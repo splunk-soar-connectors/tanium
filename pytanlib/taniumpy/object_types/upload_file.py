@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -40,8 +40,5 @@ class UploadFile(BaseType):
         self.file_cached = None
         self.part_size = None
         self.percent_complete = None
-        
-        
-
 
 

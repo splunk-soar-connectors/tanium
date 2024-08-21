@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -19,9 +19,6 @@ class StringHintList(BaseType):
             complex_properties={},
             list_properties={'string_hint': str},
         )
-        
-        
+
+
         self.string_hint = []
-
-
-

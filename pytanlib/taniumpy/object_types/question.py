@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -51,12 +51,9 @@ class Question(BaseType):
         self.user = None
         self.management_rights_group = None
         self.saved_question = None
-        
 
-from select_list import SelectList
-from group import Group
-from group import Group
-from user import User
+
 from group import Group
 from saved_question import SavedQuestion
-
+from select_list import SelectList
+from user import User

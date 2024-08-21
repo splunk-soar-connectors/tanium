@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -19,9 +19,8 @@ class ParseJobList(BaseType):
             complex_properties={},
             list_properties={'parse_job': ParseJob},
         )
-        
-        
+
+
         self.parse_job = []
 
 from parse_job import ParseJob
-

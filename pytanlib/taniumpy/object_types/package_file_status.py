@@ -1,7 +1,7 @@
 
 # Copyright (c) 2015 Tanium Inc
 #
-# Generated from console.wsdl version 0.0.1     
+# Generated from console.wsdl version 0.0.1
 #
 #
 
@@ -36,8 +36,5 @@ class PackageFileStatus(BaseType):
         self.bytes_total = None
         self.download_start_time = None
         self.last_download_progress_time = None
-        
-        
-
 
 

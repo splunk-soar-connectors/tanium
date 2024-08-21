@@ -6,11 +6,12 @@
 
 from __future__ import print_function
 
-import sys
 import cgi
-from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
-from SocketServer import ThreadingMixIn
+import sys
 import threading
+
+from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
+from SocketServer import ThreadingMixIn
 
 # disable python from creating .pyc files everywhere
 sys.dont_write_bytecode = True
